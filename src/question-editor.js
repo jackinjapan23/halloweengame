@@ -13,6 +13,7 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
   const choices = editing?.choices || [];
   const prompt = editing ? (editing.jp || editing.prompt || '') : '';
   const freeAnswer = editing && !['vocab', 'grammar'].includes(editing.type) ? editing.answer : '';
+  const tileChunks = editing?.tileGroups?.join('\n') || '';
   const choiceText = choices.length ? choices.join('\n') : '';
   const choiceNumber = editing && ['vocab', 'grammar'].includes(editing.type) ? editing.answer + 1 : 1;
   return `${headerMarkup}<main class="editor-screen">
@@ -26,6 +27,7 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
         <label class="editor-field"><span id="customPromptLabel">${({'build':'JAPANESE CLUE',vocab:'JAPANESE WORD OR MEANING',grammar:'ENGLISH SENTENCE WITH A BLANK',mistake:'SENTENCE WITH THE MISTAKE',translate:'JAPANESE SENTENCE TO TRANSLATE'})[editing?.type || 'build']}</span><textarea id="customPrompt" rows="3" maxlength="240" placeholder="Write your question or clue">${escapeHtml(prompt)}</textarea></label>
         <label class="editor-field"><span>OPTIONAL HINT · DOES NOT REVEAL THE ANSWER</span><textarea id="customHint" rows="2" maxlength="240" placeholder="Add a helpful clue for learners (optional)">${escapeHtml(editing?.hint || '')}</textarea></label>
         <label class="editor-field" id="customFreeAnswer" ${['vocab', 'grammar'].includes(editing?.type) ? 'hidden' : ''}><span>CORRECT ANSWER</span><textarea id="customAnswer" rows="2" maxlength="240" placeholder="Write the answer students should give">${escapeHtml(freeAnswer)}</textarea></label>
+        <label class="editor-field" id="customTileChunks" ${editing?.type === 'build' ? '' : 'hidden'}><span>ANSWER TILE CHUNKS · ONE SECTION PER LINE</span><textarea id="customTileChunksInput" rows="4" maxlength="400" placeholder="The boy&#10;riding the unicycle">${escapeHtml(tileChunks)}</textarea><small>Leave blank to make one tile per word. Keep the chunks in the same order as the correct answer.</small></label>
         <label class="editor-field" id="customExplanationField"><span id="customExplanationLabel">OPTIONAL GRAMMAR EXPLANATION · WHY IS IT WRONG?</span><textarea id="customExplanation" rows="3" maxlength="500" placeholder="Explain the grammar or why the answer is correct (optional)">${escapeHtml(editing?.note || '')}</textarea></label>
         <div id="customOptions" ${['vocab', 'grammar'].includes(editing?.type) ? '' : 'hidden'}>
           <label class="editor-field"><span>FOUR ANSWER CHOICES · ONE PER LINE</span><textarea id="customChoiceList" rows="4" placeholder="Write one answer choice on each line">${escapeHtml(choiceText)}</textarea></label>
@@ -34,7 +36,7 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
         <label class="editor-field"><span>DIFFICULTY</span><select id="customLevel"><option ${editing?.level === 'EASY' ? 'selected' : ''}>EASY</option><option ${!editing || editing.level === 'MEDIUM' ? 'selected' : ''}>MEDIUM</option><option ${editing?.level === 'HARD' ? 'selected' : ''}>HARD</option></select></label>
         <button class="primary-btn" data-action="${editing ? 'save-custom-question' : 'add-custom-question'}">${editing ? 'Save changes' : 'Add this question'} <span>${editing ? '&#10003;' : '&#43;'}</span></button>
         ${editing ? '<button class="outline-btn cancel-edit-btn" data-action="cancel-custom-edit">Cancel editing</button>' : ''}
-        <p class="editor-note">For multiple choice, add exactly four options on separate lines and choose the correct option number. For build questions, the answer is split into word tiles automatically.</p>
+        <p class="editor-note">For multiple choice, add exactly four options on separate lines and choose the correct option number. For sentence building, you can leave tiles as single words or enter your own larger chunks, one per line.</p>
       </section>
       <section class="editor-list-card"><div class="editor-list-heading"><div><span class="eyebrow orange">MY QUESTION SET</span><label class="set-name-field"><span>QUESTION SET NAME</span><input id="questionSetName" maxlength="60" value="${escapeHtml(setName)}"></label><h2>${list.length} questions</h2></div>
         <div class="editor-file-actions"><button class="outline-btn" data-action="download-questions">&#8595; Save file</button><button class="outline-btn" data-action="import-questions">&#8593; Upload file</button><input id="questionFile" type="file" accept=".json,application/json" hidden></div>
@@ -46,10 +48,19 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
   </main>`;
 }
 
-export function makeCustomQuestion({ type, prompt, answer, choicesText, answerIndex, level, explanation = '', hint = '' }) {
+export function makeCustomQuestion({ type, prompt, answer, choicesText, answerIndex, level, explanation = '', hint = '', tileChunksText = '' }) {
   if (!prompt || ((!['vocab', 'grammar'].includes(type)) && !answer)) throw new Error('Please fill in the question and correct answer.');
   const q = { id: `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, type, level, answer };
-  if (type === 'build') { q.jp = prompt; q.words = answer.split(/\s+/).filter(Boolean).sort(() => Math.random() - 0.5); }
+  if (type === 'build') {
+    q.jp = prompt;
+    const groups = tileChunksText.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+    if (groups.length) {
+      const compact = value => value.replace(/\s+/g, '').toLocaleLowerCase();
+      if (compact(groups.join(' ')) !== compact(answer)) throw new Error('Your tile chunks must make the correct answer in order. Check the words and punctuation.');
+      q.tileGroups = groups;
+    }
+    q.words = (groups.length ? groups : answer.split(/\s+/).filter(Boolean)).sort(() => Math.random() - 0.5);
+  }
   else if (type === 'vocab' || type === 'grammar') {
     q.choices = choicesText.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
     q.answer = Number(answerIndex) - 1;
@@ -76,6 +87,7 @@ export function parseQuestionSet(text) {
   const valid = list.every(q => {
     if (!q || !['build', 'vocab', 'grammar', 'mistake', 'translate'].includes(q.type)) return false;
     if (q.hint !== undefined && typeof q.hint !== 'string') return false;
+    if (q.tileGroups !== undefined && (!Array.isArray(q.tileGroups) || q.tileGroups.some(group => typeof group !== 'string' || !group.trim()))) return false;
     if (q.type === 'vocab') return Boolean(q.jp && Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4);
     if (q.type === 'grammar') return Boolean(q.prompt && Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4);
     if (typeof q.answer !== 'string') return false;
