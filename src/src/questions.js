@@ -1,0 +1,27 @@
+export const QUESTIONS=[
+{id:'q01',type:'build',level:'EASY',jp:'私は2010年から沖縄に住んでいます。',words:['Okinawa','lived','in','have','I','since','2010'],answer:'I have lived in Okinawa since 2010.'},
+{id:'q02',type:'vocab',level:'EASY',jp:'環境',choices:['experience','environment','government','culture'],answer:1},
+{id:'q03',type:'grammar',level:'EASY',prompt:'My father has lived in Okinawa _____ 2010.',choices:['for','since','during','from'],answer:1},
+{id:'q04',type:'mistake',level:'EASY',prompt:'She has went to school.',answer:'She has gone to school.',note:'Use the past participle “gone” after has.'},
+{id:'q05',type:'translate',level:'EASY',jp:'私は3年間英語を勉強しています。',answer:'I have studied English for three years.'},
+{id:'q06',type:'build',level:'MEDIUM',jp:'この本は多くの人に読まれています。',words:['read','by','many','is','This','people','book'],answer:'This book is read by many people.'},
+{id:'q07',type:'vocab',level:'MEDIUM',jp:'発明する',choices:['invite','invent','improve','include'],answer:1},
+{id:'q08',type:'grammar',level:'MEDIUM',prompt:'This is the girl _____ helped me yesterday.',choices:['which','whose','who','what'],answer:2},
+{id:'q09',type:'mistake',level:'MEDIUM',prompt:'I enjoy to play soccer with my friends.',answer:'I enjoy playing soccer with my friends.',note:'Enjoy is followed by a gerund (-ing form).'},
+{id:'q10',type:'translate',level:'MEDIUM',jp:'私には医者であるおじがいます。',answer:'I have an uncle who is a doctor.'},
+{id:'q11',type:'build',level:'MEDIUM',jp:'私は何か飲むものが欲しいです。',words:['drink','something','to','want','I'],answer:'I want something to drink.'},
+{id:'q12',type:'vocab',level:'EASY',jp:'経験',choices:['experience','experiment','example','excuse'],answer:0},
+{id:'q13',type:'grammar',level:'MEDIUM',prompt:'English _____ in many countries around the world.',choices:['speaks','is spoken','spoke','speaking'],answer:1},
+{id:'q14',type:'mistake',level:'MEDIUM',prompt:'This is the most interesting book I have never read.',answer:'This is the most interesting book I have ever read.',note:'Use ever in a positive superlative sentence.'},
+{id:'q15',type:'translate',level:'MEDIUM',jp:'私たちが訪れた町はとても美しかったです。',answer:'The town which we visited was very beautiful.'},
+{id:'q16',type:'build',level:'HARD',jp:'彼女は私に窓を開けるように頼みました。',words:['the','open','asked','to','me','She','window'],answer:'She asked me to open the window.'},
+{id:'q17',type:'vocab',level:'MEDIUM',jp:'政府',choices:['environment','government','development','agreement'],answer:1},
+{id:'q18',type:'grammar',level:'EASY',prompt:'I have known Ken _____ we were children.',choices:['for','while','since','during'],answer:2},
+{id:'q19',type:'mistake',level:'HARD',prompt:'If it will rain tomorrow, we will stay home.',answer:'If it rains tomorrow, we will stay home.',note:'Use the present tense in an if-clause about the future.'},
+{id:'q20',type:'translate',level:'HARD',jp:'これは私が今まで見た中で最も美しい写真です。',answer:'This is the most beautiful picture I have ever seen.'},
+{id:'q21',type:'grammar',level:'EASY',prompt:'It is important _____ your homework every day.',choices:['do','doing','to do','did'],answer:2},
+{id:'q22',type:'vocab',level:'EASY',jp:'文化',choices:['future','nature','culture','feature'],answer:2},
+{id:'q23',type:'build',level:'MEDIUM',jp:'私は彼が作ったケーキを食べました。',words:['made','the','ate','he','cake','I'],answer:'I ate the cake he made.'},
+{id:'q24',type:'grammar',level:'MEDIUM',prompt:'This bag is _____ than that one.',choices:['heavy','heavier','heaviest','more heavy'],answer:1}
+];
+export const TYPE_LABEL={build:'SENTENCE BUILDING',vocab:'VOCABULARY',grammar:'GRAMMAR',mistake:'FIX THE MISTAKE',translate:'TRANSLATION'};

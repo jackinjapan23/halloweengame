@@ -1,0 +1,7 @@
+export const STORAGE_KEY='midnight-candy-game-v1';
+export const clone=v=>structuredClone(v);
+export function save(s){localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}
+export function load(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY));return s?.version===1?s:null}catch{return null}}
+export function applyOutcome(state,outcome,targetId){const n=clone(state),team=n.teams.find(t=>t.id===n.currentTeamId),target=n.teams.find(t=>t.id===targetId);switch(outcome.effect){case'gain':team.score+=outcome.amount;break;case'lose':team.score=Math.max(0,team.score-outcome.amount);break;case'all_gain':n.teams.forEach(t=>t.score+=outcome.amount);break;case'swap':if(target&&target.id!==team.id)[team.score,target.score]=[target.score,team.score];break;case'steal':if(target&&target.id!==team.id){const a=Math.min(outcome.amount,target.score);target.score-=a;team.score+=a}break;case'skip':team.skipTurns++}return n}
+export function nextTeam(state){const n=clone(state);let i=n.teams.findIndex(t=>t.id===n.currentTeamId);for(let loops=0;loops<n.teams.length*2;loops++){i=(i+1)%n.teams.length;const t=n.teams[i];if(t.skipTurns>0){t.skipTurns--;n.lastSkippedTeam=t.id;continue}n.currentTeamId=t.id;n.lastSkippedTeam=null;break}n.phase=n.used.length>=n.pumpkinCount?'results':'board';return n}
+
