@@ -24,6 +24,7 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
           <option value="build" ${selected('build')}>Sentence building</option><option value="vocab" ${selected('vocab')}>Vocabulary</option><option value="grammar" ${selected('grammar')}>Grammar multiple choice</option><option value="mistake" ${selected('mistake')}>Fix the mistake</option><option value="translate" ${selected('translate')}>Translation</option>
         </select></label>
         <label class="editor-field"><span id="customPromptLabel">${({'build':'JAPANESE CLUE',vocab:'JAPANESE WORD OR MEANING',grammar:'ENGLISH SENTENCE WITH A BLANK',mistake:'SENTENCE WITH THE MISTAKE',translate:'JAPANESE SENTENCE TO TRANSLATE'})[editing?.type || 'build']}</span><textarea id="customPrompt" rows="3" maxlength="240" placeholder="Write your question or clue">${escapeHtml(prompt)}</textarea></label>
+        <label class="editor-field"><span>OPTIONAL HINT · DOES NOT REVEAL THE ANSWER</span><textarea id="customHint" rows="2" maxlength="240" placeholder="Add a helpful clue for learners (optional)">${escapeHtml(editing?.hint || '')}</textarea></label>
         <label class="editor-field" id="customFreeAnswer" ${['vocab', 'grammar'].includes(editing?.type) ? 'hidden' : ''}><span>CORRECT ANSWER</span><textarea id="customAnswer" rows="2" maxlength="240" placeholder="Write the answer students should give">${escapeHtml(freeAnswer)}</textarea></label>
         <label class="editor-field" id="customExplanationField"><span id="customExplanationLabel">OPTIONAL GRAMMAR EXPLANATION · WHY IS IT WRONG?</span><textarea id="customExplanation" rows="3" maxlength="500" placeholder="Explain the grammar or why the answer is correct (optional)">${escapeHtml(editing?.note || '')}</textarea></label>
         <div id="customOptions" ${['vocab', 'grammar'].includes(editing?.type) ? '' : 'hidden'}>
@@ -45,7 +46,7 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
   </main>`;
 }
 
-export function makeCustomQuestion({ type, prompt, answer, choicesText, answerIndex, level, explanation = '' }) {
+export function makeCustomQuestion({ type, prompt, answer, choicesText, answerIndex, level, explanation = '', hint = '' }) {
   if (!prompt || ((!['vocab', 'grammar'].includes(type)) && !answer)) throw new Error('Please fill in the question and correct answer.');
   const q = { id: `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, type, level, answer };
   if (type === 'build') { q.jp = prompt; q.words = answer.split(/\s+/).filter(Boolean).sort(() => Math.random() - 0.5); }
@@ -58,6 +59,7 @@ export function makeCustomQuestion({ type, prompt, answer, choicesText, answerIn
   } else if (type === 'mistake') q.prompt = prompt;
   else q.jp = prompt;
   if (explanation.trim()) q.note = explanation.trim();
+  if (hint.trim()) q.hint = hint.trim();
   return q;
 }
 
@@ -73,6 +75,7 @@ export function parseQuestionSet(text) {
   if (!Array.isArray(list) || !list.length) throw new Error('No questions were found in that file.');
   const valid = list.every(q => {
     if (!q || !['build', 'vocab', 'grammar', 'mistake', 'translate'].includes(q.type)) return false;
+    if (q.hint !== undefined && typeof q.hint !== 'string') return false;
     if (q.type === 'vocab') return Boolean(q.jp && Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4);
     if (q.type === 'grammar') return Boolean(q.prompt && Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4);
     if (typeof q.answer !== 'string') return false;

@@ -41,9 +41,9 @@
 .set-name-field input:focus{outline:none;border-color:#ff915e;box-shadow:0 0 0 3px #ff915e1c}
 .cancel-edit-btn{width:100%;margin-top:9px}
 
-/* Teacher-editable prize chances and readable odds during play */
+/* Teacher-editable prize chances are shown in setup only. */
 .odds-settings{margin:12px 0 16px;padding:12px 14px;border:1px solid #ff9b6340;border-radius:12px;background:#ff9b630b}
-.odds-settings>summary,.player-odds>summary{color:#ffc095;font-size:13px;font-weight:800;cursor:pointer}
+.odds-settings>summary{color:#ffc095;font-size:13px;font-weight:800;cursor:pointer}
 .odds-settings>p{margin:9px 0;color:#aba2b0;font-size:11px;line-height:1.5}
 .odds-groups{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
 .odds-groups section{padding:11px;border:1px solid #ffffff14;border-radius:9px;background:#11111770}
@@ -52,14 +52,7 @@
 .odds-row input{width:58px;height:30px;border:1px solid #ffffff20;border-radius:6px;background:#0e0d12;color:#fff;text-align:center;font:700 12px 'DM Sans',sans-serif}
 .odds-row b{color:#ffd08a;text-align:right;font-size:11px}
 .odds-save-note{font-size:10px!important}
-.player-odds{width:min(520px,92vw);margin:14px auto;color:#d9d0dd;text-align:left}
-.player-odds>summary{width:fit-content;margin:0 auto;padding:7px 12px;border:1px solid #ffffff24;border-radius:999px;background:#ffffff08;font-size:11px}
-.player-odds-list{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin-top:8px;padding:10px 13px;border:1px solid #ffffff18;border-radius:10px;background:#100e15;font-size:11px}
-.player-odds-list span{display:flex;justify-content:space-between;gap:8px;padding:3px 0}
-.player-odds-list b,.revealed-odds{color:#ffd08a}
-.revealed-odds{display:block;width:100%;font-size:12px;font-weight:800}
-.choice-screen .player-odds{position:relative;z-index:1;margin:9px auto}
-@media(max-width:700px){.odds-groups{grid-template-columns:1fr}.player-odds-list{grid-template-columns:1fr}.odds-settings{padding:10px}}
+@media(max-width:700px){.odds-groups{grid-template-columns:1fr}.odds-settings{padding:10px}}
 
 /* Full-screen standings reveal between completed team rounds */
 .round-leaderboard{position:relative;isolation:isolate;min-height:calc(100vh - 78px);padding:clamp(30px,6vh,70px) 20px 50px;overflow:hidden;text-align:center;background:radial-gradient(ellipse at 50% 12%,#7f3a492c,transparent 42%),#100e15}
@@ -167,6 +160,103 @@ html:fullscreen .results-screen .microcopy{margin:0}
 html:fullscreen .modal-backdrop{position:fixed;inset:0;overflow:hidden}
 @media(max-width:760px){html:fullscreen .app-shell{padding:0 8px 5px}html:fullscreen .game-layout{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}.game-layout>.score-panel{max-height:18vh;display:block}.game-layout>.score-panel .score-list{display:flex;gap:4px;overflow:hidden}.game-layout>.score-panel .score-row{min-width:95px;flex:1;padding:4px}.game-layout>.score-panel .score-footer,html:fullscreen .game-layout>.score-panel .panel-title{display:none}html:fullscreen .question-layout{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:5px}.question-sidebar{order:2;max-height:62px}.question-sidebar .score-panel .panel-title,.question-sidebar .score-footer,.question-progress{display:none}.question-sidebar .score-panel{display:block}.question-sidebar .score-list{display:flex;gap:3px;overflow:hidden}.question-sidebar .score-row{flex:1;min-width:0;padding:3px 4px}.question-sidebar .score-team{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.question-sidebar .score-row>strong{font-size:12px}.question-card{order:1;width:100%;height:100%;padding:10px}.question-team{margin:5px 0}.question-team .pumpkin{display:none}.question-meta{padding-bottom:3px}.prompt-text{font-size:clamp(22px,4.5vh,34px);margin:8px 0}.jp-prompt{margin:8px 0;padding:9px}.jp-prompt strong{font-size:clamp(22px,4vh,32px)}.choice-grid{gap:5px}.choice-btn{min-height:clamp(38px,7vh,55px);padding:6px;font-size:clamp(13px,2vh,17px)}.question-controls{padding-top:5px;margin-top:auto}.wrong-btn,.right-btn,.outline-btn{padding:9px 12px;font-size:12px}.resolved-note{padding:8px;font-size:13px}.fate-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.fate-card{height:clamp(160px,33vh,250px);padding:8px}.fate-art{font-size:clamp(40px,8vh,60px)}.fate-card strong{font-size:clamp(24px,5vh,36px)}html:fullscreen .treat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.trick-screen .choice-score{margin:0}.has-reveal .score-row{min-width:0}}
 @media(max-height:650px){html:fullscreen .topbar{flex-basis:44px;height:44px}html:fullscreen .icon-btn{padding:6px 8px}html:fullscreen .brand small{display:none}html:fullscreen .turn-banner h1{font-size:24px}html:fullscreen .turn-candy b{font-size:16px}html:fullscreen .leaderboard-row{height:38px}html:fullscreen .round-leaderboard h1{font-size:36px}html:fullscreen .event-icon{font-size:68px}html:fullscreen .big-candy-bag{width:100px;height:100px}html:fullscreen .fate-card{height:150px}}
+
+/* Opening screen, classroom turn spotlight, and optional question hints. */
+.intro-screen{position:relative;isolation:isolate;min-height:calc(100vh - 88px);display:grid;place-items:center;overflow:hidden;text-align:center;background:radial-gradient(ellipse at 50% 65%,#351b25 0,transparent 45%),linear-gradient(#0b0b11,#111019 65%,#17131a)}
+.intro-screen:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 50% 20%,#ffdf9c20,transparent 38%),linear-gradient(180deg,transparent 70%,#08090c 100%)}
+.intro-moon{position:absolute;top:7%;left:calc(50% - clamp(70px,12vw,150px));width:clamp(140px,24vw,300px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff4cb,#dfaa73 68%,#8f5e55);box-shadow:0 0 45px #ffc87b36,0 0 150px #fb9a5330;animation:moon-breathe 5s ease-in-out infinite}
+.intro-content{position:relative;z-index:2;width:min(720px,94vw);padding:12px 16px 38px}
+.intro-content h1{font:800 clamp(62px,12vw,124px)/.83 'Playfair Display',serif;letter-spacing:-5px;margin:4px 0 14px;text-shadow:0 8px 30px #000b}
+.intro-content h1 em{color:var(--orange);font-style:normal}
+.intro-content p{max-width:480px;margin:0 auto 20px;color:#d2c4d4;font-size:clamp(14px,2.1vw,19px);line-height:1.6}
+.intro-pumpkin{font-size:clamp(64px,12vh,110px);line-height:1;filter:drop-shadow(0 0 26px #ff773d65);animation:pumpkin-float 3.2s ease-in-out infinite}
+.intro-start{width:min(360px,100%);margin:auto;padding:16px 20px;font-size:16px}
+.intro-ground{position:absolute;left:-8%;right:-8%;bottom:-75px;height:170px;border-radius:50% 50% 0 0;background:linear-gradient(#23201f,#08090b);box-shadow:0 -18px 60px #e56c3120}
+.intro-mist{position:absolute;bottom:12%;width:65vw;height:100px;border-radius:50%;background:#aaa2b525;filter:blur(35px);animation:mist-drift 11s ease-in-out infinite alternate}
+.mist-one{left:-18%}.mist-two{right:-20%;animation-delay:-5s}
+.intro-bat{position:absolute;z-index:1;font-size:clamp(22px,4vw,42px);filter:brightness(.45);animation:bat-cross 12s linear infinite}
+.bat-one{left:-10%;top:22%}.bat-two{left:-20%;top:35%;font-size:26px;animation-delay:-7s}
+.setup-back{margin:0 0 12px;padding:0}
+.board-teacher-actions,.results-actions{display:flex;align-items:center;justify-content:center;gap:10px}
+.results-actions{width:min(520px,100%);margin:4px auto}
+.results-actions>*{flex:1}
+.results-actions .outline-btn{padding:14px 16px}
+.turn-banner{position:relative;isolation:isolate;overflow:hidden;border-radius:14px}
+.turn-spotlight{position:absolute;z-index:-1;inset:-35px;border-radius:24px;pointer-events:none;background:radial-gradient(ellipse at 16% 50%,#ffad5c5c,transparent 55%);opacity:0;animation:turn-spotlight 1.25s ease-out both}
+.turn-arrival h1{animation:turn-name-in .7s cubic-bezier(.2,.8,.2,1) both;text-shadow:0 0 25px #ff9a4a55}
+.hint-btn{display:inline-flex;align-items:center;gap:8px;border:1px solid #ffd08070;border-radius:9px;background:linear-gradient(120deg,#ffcf7530,#ff8b4a18);color:#ffe0a5;padding:10px 14px;font:800 13px 'DM Sans',sans-serif;cursor:pointer;transition:transform .15s,background .15s}
+.hint-btn:hover{transform:translateY(-2px);background:#ffbc6040}
+.question-hint-area{margin:clamp(6px,1vh,12px) 0}
+.question-hint{display:flex;align-items:flex-start;gap:10px;border:1px solid #ffd08060;border-left:4px solid #ffc56a;border-radius:10px;padding:10px 14px;background:linear-gradient(110deg,#ffc56a20,#ffffff06);animation:hint-appear .32s ease-out both}
+.question-hint>span{flex:none;color:#ffd17c;font-size:10px;font-weight:900;letter-spacing:1px}
+.question-hint p{margin:0;color:#fff0d2;font-size:clamp(13px,1.5vw,17px);line-height:1.4}
+.board-teacher-actions .subtle-btn{padding:4px 8px}
+@keyframes moon-breathe{0%,100%{transform:scale(.98);filter:brightness(.94)}50%{transform:scale(1.03);filter:brightness(1.08)}}
+@keyframes pumpkin-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+@keyframes mist-drift{from{transform:translateX(-4vw)}to{transform:translateX(8vw)}}
+@keyframes bat-cross{0%{transform:translateX(0) translateY(0)}45%{transform:translateX(55vw) translateY(-20px)}100%{transform:translateX(120vw) translateY(5px)}}
+@keyframes turn-spotlight{0%{opacity:0;transform:scale(.8)}25%{opacity:1}100%{opacity:0;transform:scale(1.12)}}
+@keyframes turn-name-in{0%{opacity:.35;transform:translateX(-10px)}100%{opacity:1;transform:translateX(0)}}
+@keyframes hint-appear{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){
+ .intro-screen{min-height:calc(100vh - 70px)}
+ .intro-content h1{letter-spacing:-3px}
+ .board-teacher-actions{gap:3px}
+ .board-teacher-actions .subtle-btn{font-size:10px}
+ .results-actions{gap:7px}
+}
+@media(max-height:560px){.intro-content{padding:4px 12px 20px}.intro-content h1{font-size:clamp(48px,11vh,74px);margin:0}.intro-pumpkin{font-size:52px}.intro-content p{margin-bottom:8px}.intro-ground{height:110px}.intro-moon{top:4%;width:110px}}
+@media(prefers-reduced-motion:reduce){.intro-moon,.intro-pumpkin,.intro-mist,.intro-bat,.turn-spotlight,.turn-arrival h1,.question-hint{animation:none!important;transition:none!important}}
+.reduce-motion .intro-moon,.reduce-motion .intro-pumpkin,.reduce-motion .intro-mist,.reduce-motion .intro-bat,.reduce-motion .turn-spotlight,.reduce-motion .turn-arrival h1,.reduce-motion .question-hint{animation:none!important;transition:none!important}
+html:fullscreen .intro-screen{height:calc(100dvh - clamp(48px,7vh,72px));min-height:0}
+html:fullscreen .intro-content{padding:8px 16px 26px}
+html:fullscreen .intro-content h1{font-size:clamp(58px,12vh,116px)}
+html:fullscreen .intro-pumpkin{font-size:clamp(60px,12vh,105px)}
+html:fullscreen .setup-layout{height:100%;min-height:0;padding:clamp(8px,2vh,20px) clamp(8px,2vw,24px);gap:clamp(12px,3vw,40px)}
+html:fullscreen .setup-card{max-height:100%;overflow:hidden}
+html:fullscreen .question-card{display:flex;flex-direction:column}
+html:fullscreen .question-hint-area{margin:5px 0}
+html:fullscreen .question-hint{padding:7px 10px}
+html:fullscreen .results-actions{margin:3px auto}
+html:fullscreen .results-actions .primary-btn,html:fullscreen .results-actions .outline-btn{padding:9px 12px}
+html:fullscreen .turn-banner{padding:5px}
+html:fullscreen .turn-spotlight{inset:-24px}
+@media(max-width:760px){html:fullscreen .setup-layout{grid-template-columns:1fr;gap:4px;padding:4px 8px}html:fullscreen .setup-layout>.hero{display:none}html:fullscreen .setup-card{padding:10px 12px}html:fullscreen .setup-card .card-heading{margin-bottom:8px}html:fullscreen .setup-card .stepper{margin:4px 0 7px}html:fullscreen .setup-card .team-inputs{margin-bottom:8px}html:fullscreen .setup-card .start-btn{margin-top:8px}}
+html:fullscreen .odds-groups{gap:6px;margin-top:6px}
+html:fullscreen .odds-groups section{padding:6px}
+html:fullscreen .odds-row{padding:3px 0;font-size:10px}
+html:fullscreen .odds-row input{height:24px}
+@media(max-height:680px){html:fullscreen .setup-card{padding:8px 12px}html:fullscreen .setup-card .card-heading{margin-bottom:8px}html:fullscreen .setup-card .card-heading h2{font-size:19px}html:fullscreen .setup-card .stepper{margin:4px 0 7px}html:fullscreen .setup-card .team-inputs{margin-bottom:8px}html:fullscreen .setup-card .team-field{height:30px}html:fullscreen .setup-card .question-source-block{margin-top:7px}html:fullscreen .setup-card .odds-settings{margin:5px 0;padding:6px}html:fullscreen .setup-card .odds-settings>p{margin:4px 0;font-size:9px}html:fullscreen .setup-card .odds-groups{margin-top:3px}html:fullscreen .setup-card .odds-groups section{padding:3px}html:fullscreen .setup-card .odds-groups h3{margin-bottom:3px;font-size:9px}html:fullscreen .setup-card .odds-row{padding:1px 0;font-size:8px}html:fullscreen .setup-card .odds-row input{height:20px;width:42px}html:fullscreen .setup-card .odds-row{grid-template-columns:minmax(0,1fr) 42px 30px}html:fullscreen .setup-card .start-btn{margin-top:6px;padding:9px 12px}html:fullscreen .setup-card .microcopy{margin:4px 0}}
+
+/* Preserve the regular mobile layout outside fullscreen. */
+@media(max-width:760px){
+ html:not(:fullscreen) .game-layout>.score-panel{max-height:none}
+ html:not(:fullscreen) .game-layout>.score-panel .score-list{display:block;overflow:visible}
+ html:not(:fullscreen) .game-layout>.score-panel .score-row{min-width:0;flex:none;padding:8px 6px}
+ html:not(:fullscreen) .game-layout>.score-panel .score-footer{display:grid}
+ html:not(:fullscreen) .game-layout>.score-panel .panel-title{display:flex}
+ html:not(:fullscreen) .question-sidebar{max-height:none}
+ html:not(:fullscreen) .question-sidebar .score-panel .panel-title{display:flex}
+ html:not(:fullscreen) .question-sidebar .score-footer{display:grid}
+ html:not(:fullscreen) .question-progress{display:block}
+ html:not(:fullscreen) .question-sidebar .score-list{display:block;overflow:visible}
+ html:not(:fullscreen) .question-sidebar .score-row{flex:none;min-width:0;padding:8px 6px}
+ html:not(:fullscreen) .question-card{height:auto;min-height:0;padding:23px 18px}
+ html:not(:fullscreen) .question-team{margin:17px 0 23px}
+ html:not(:fullscreen) .question-team .pumpkin{display:inline-flex}
+ html:not(:fullscreen) .question-meta{padding-bottom:16px}
+ html:not(:fullscreen) .prompt-text{font-size:clamp(32px,9vw,46px);margin:28px 0}
+ html:not(:fullscreen) .jp-prompt{margin:20px 0}
+ html:not(:fullscreen) .jp-prompt strong{font-size:clamp(28px,8vw,39px)}
+ html:not(:fullscreen) .choice-grid{grid-template-columns:1fr;gap:12px}
+ html:not(:fullscreen) .choice-btn{min-height:74px;padding:13px 15px;font-size:20px}
+ html:not(:fullscreen) .question-controls{align-items:stretch;gap:12px;flex-direction:column;margin-top:0;padding-top:0}
+ html:not(:fullscreen) .fate-options{grid-template-columns:1fr;max-width:440px;gap:13px}
+ html:not(:fullscreen) .fate-card{height:auto;min-height:245px;padding:22px}
+ html:not(:fullscreen) .fate-art{font-size:65px;margin-bottom:10px}
+ html:not(:fullscreen) .fate-card strong{font-size:38px}
+ html:not(:fullscreen) .treat-grid{grid-template-columns:repeat(2,minmax(130px,1fr))}
+}
 
 /* Clear side-by-side correction for mistake questions */
 .mistake-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:clamp(24px,4vh,42px) 0 18px}

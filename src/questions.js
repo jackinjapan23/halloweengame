@@ -25,3 +25,29 @@ export const QUESTIONS=[
 {id:'q24',type:'grammar',level:'MEDIUM',prompt:'This bag is _____ than that one.',choices:['heavy','heavier','heaviest','more heavy'],answer:1}
 ];
 export const TYPE_LABEL={build:'SENTENCE BUILDING',vocab:'VOCABULARY',grammar:'GRAMMAR',mistake:'FIX THE MISTAKE',translate:'TRANSLATION'};
+export const QUESTION_HINTS={
+ q01:'For a starting point in time, use the word that pairs with a date.',
+ q02:'Think of the natural world around people, animals, and plants.',
+ q03:'Choose the preposition used with a specific starting time.',
+ q04:'After “has,” use the past participle form of the verb.',
+ q05:'For a length of time, use the duration preposition with the present perfect.',
+ q06:'The subject receives the action. Use “be” plus a past participle.',
+ q07:'Look for the verb meaning to create something that did not exist before.',
+ q08:'The missing relative pronoun refers to a person doing the action.',
+ q09:'After “enjoy,” use a verb ending in -ing.',
+ q10:'Join the information about your uncle with a relative clause for a person.',
+ q11:'Use an infinitive after “something” to describe its purpose.',
+ q12:'This is knowledge or skill you gain by doing or seeing things.',
+ q13:'This sentence is passive: use “be” plus the past participle.',
+ q14:'A positive superlative about your experience uses a word meaning “at any time.”',
+ q15:'Use a relative clause to add information about the town.',
+ q16:'The pattern is “ask someone” followed by “to” and a verb.',
+ q17:'Think of the group responsible for running a country.',
+ q18:'The clause tells when the knowing began; use the matching time connector.',
+ q19:'In a first conditional, use present simple in the if-clause.',
+ q20:'A superlative about what you have seen uses the present perfect.',
+ q21:'After “It is important,” use “to” followed by the base verb.',
+ q22:'This word describes a group’s traditions, arts, and way of life.',
+ q23:'Put the information about who made the cake directly after “cake.”',
+ q24:'After “than,” use the comparative form. For this adjective, change -y to -i before -er.'
+};
