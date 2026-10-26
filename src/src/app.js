@@ -1,6 +1,7 @@
 import { QUESTIONS, TYPE_LABEL } from './questions.js';
 import { OUTCOMES } from './outcomes.js';
 import { applyOutcome, nextTeam, save, load, clone } from './engine.js';
+import { renderQuestionEditor, makeCustomQuestion, downloadQuestionSet, parseQuestionSet } from './question-editor.js';
 
 const app = document.querySelector('#app');
 const toastEl = document.querySelector('#toast');
@@ -10,6 +11,11 @@ let selectedChoice = null;
 let toastTimer;
 let soundEnabled = localStorage.getItem('midnight-candy-sound') !== 'off';
 let reducedMotion = localStorage.getItem('midnight-candy-motion') === 'reduced';
+const CUSTOM_KEY='midnight-candy-custom-questions-v1',QUESTION_SOURCE_KEY='midnight-candy-question-source-v1';
+function loadCustomQuestions(){try{const list=JSON.parse(localStorage.getItem(CUSTOM_KEY)||'[]');return Array.isArray(list)?list:[]}catch{return []}}
+let customQuestions=loadCustomQuestions();
+let questionSource=localStorage.getItem(QUESTION_SOURCE_KEY)==='custom'&&customQuestions.length?'custom':'built-in';
+let editorOpen=false;
 if(reducedMotion) document.documentElement.classList.add('reduce-motion');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const current = () => state?.teams.find(t => t.id === state.currentTeamId);
@@ -29,12 +35,16 @@ const pumpkin = (n, used = false) => `<span class="pumpkin ${used?'is-used':''}"
 function header() {
  return `<header class="topbar"><a class="brand" href="#"><span class="brand-icon">&#127875;</span><span><strong>MIDNIGHT CANDY</strong><small>A LITTLE ENGLISH. A LOT OF HALLOWEEN.</small></span></a><div class="top-actions"><button class="icon-btn" data-action="sound-toggle" aria-pressed="${soundEnabled}">${soundEnabled?'&#128266;':'&#128263;'} <span>Sound ${soundEnabled?'on':'off'}</span></button><button class="icon-btn" data-action="motion-toggle" aria-pressed="${reducedMotion}">&#10024; <span>Motion ${reducedMotion?'reduced':'full'}</span></button><button class="icon-btn" data-action="fullscreen">&#x26F6; <span>Full screen</span></button>${state&&state.phase!=='setup'?'<button class="icon-btn" data-action="pause">&#x275A;&#x275A; <span>Pause</span></button>':''}</div></header>`;
 }
+function questionSourceOptions(){return '<label class="field-label" for="questionSource">QUESTION SET</label><select class="question-source" id="questionSource"><option value="built-in">Midnight Candy questions (24)</option><option value="custom" '+(customQuestions.length?'':'disabled')+'>My questions ('+customQuestions.length+')</option></select><button class="outline-btn editor-open-btn" data-action="open-editor">&#9998; Create / edit questions</button>'}
+function editor(){return renderQuestionEditor(customQuestions,esc,header())}
+function persistCustomQuestions(){localStorage.setItem(CUSTOM_KEY,JSON.stringify(customQuestions))}
 function setup() {
- return `${header()}<main class="setup-layout"><section class="hero"><div class="eyebrow"><span class="dot"></span> HALLOWEEN ENGLISH CHALLENGE <span class="dot"></span></div><h1>Midnight<br><em>Candy</em></h1><p class="hero-copy">A little English. A lot of Halloween.<br>Pick a pumpkin, answer together, and see what the night has in store.</p><div class="hero-art"><span class="hero-moon"></span><span class="hero-ghost ghost-a">&#128123;</span><span class="hero-ghost ghost-b">&#129415;</span><span class="hero-pumpkin">&#127875;</span><span class="spark s1">&#10022;</span><span class="spark s2">&#10023;</span><span class="hero-grass"></span></div><div class="feature-row"><span>&#10022; 24 classroom-ready questions</span><span>&#10022; 10 spooky outcomes</span><span>&#10022; Works offline</span></div></section><section class="setup-card"><div class="card-heading"><div><span class="eyebrow orange">TEACHER SETUP</span><h2>Prepare your game</h2></div><div class="setup-badge">About 1 minute</div></div><label class="field-label">NUMBER OF TEAMS</label><div class="stepper"><button data-action="team-minus" aria-label="Fewer teams">&#8722;</button><strong id="teamCount">4</strong><button data-action="team-plus" aria-label="More teams">+</button><span>teams - choose 2&#8211;6</span></div><div class="team-inputs" id="teamInputs"></div><div class="field-grid"><label><span>STARTING CANDY</span><div class="input-wrap"><input id="startingScore" type="number" min="0" max="999" value="0"><b>&#127852;</b></div></label><label><span>NUMBER OF PUMPKINS</span><div class="input-wrap"><input id="pumpkinCount" type="number" min="1" max="20" value="12"><b>&#127875;</b></div></label></div><button class="primary-btn start-btn" data-action="start">Start the game <span>&#8594;</span></button><p class="microcopy">Your game saves automatically on this device.</p></section></main>`;
+ return `${header()}<main class="setup-layout"><section class="hero"><div class="eyebrow"><span class="dot"></span> HALLOWEEN ENGLISH CHALLENGE <span class="dot"></span></div><h1>Midnight<br><em>Candy</em></h1><p class="hero-copy">A little English. A lot of Halloween.<br>Pick a pumpkin, answer together, and see what the night has in store.</p><div class="hero-art"><span class="hero-moon"></span><span class="hero-ghost ghost-a">&#128123;</span><span class="hero-ghost ghost-b">&#129415;</span><span class="hero-pumpkin">&#127875;</span><span class="spark s1">&#10022;</span><span class="spark s2">&#10023;</span><span class="hero-grass"></span></div><div class="feature-row"><span>&#10022; 24 classroom-ready questions</span><span>&#10022; 10 spooky outcomes</span><span>&#10022; Works offline</span></div></section><section class="setup-card"><div class="card-heading"><div><span class="eyebrow orange">TEACHER SETUP</span><h2>Prepare your game</h2></div><div class="setup-badge">About 1 minute</div></div><label class="field-label">NUMBER OF TEAMS</label><div class="stepper"><button data-action="team-minus" aria-label="Fewer teams">&#8722;</button><strong id="teamCount">4</strong><button data-action="team-plus" aria-label="More teams">+</button><span>teams - choose 2&#8211;6</span></div><div class="team-inputs" id="teamInputs"></div><div class="field-grid"><label><span>STARTING CANDY</span><div class="input-wrap"><input id="startingScore" type="number" min="0" max="999" value="0"><b>&#127852;</b></div></label><label><span>NUMBER OF PUMPKINS</span><div class="input-wrap"><input id="pumpkinCount" type="number" min="1" max="20" value="12"><b>&#127875;</b></div></label></div><div class="question-source-block">${questionSourceOptions()}</div><button class="primary-btn start-btn" data-action="start">Start the game <span>&#8594;</span></button><p class="microcopy">Your game saves automatically on this device.</p></section></main>`;
 }
 function renderTeamInputs() {
  const count = +(document.querySelector('#teamCount')?.textContent || 4);
  const el = document.querySelector('#teamInputs'); if (!el) return;
+ const source=document.querySelector('#questionSource');if(source){source.value=questionSource;const option=source.querySelector('option[value=custom]');option.disabled=!customQuestions.length;option.textContent='My questions ('+customQuestions.length+')';}
  const old = [...el.querySelectorAll('input')].map(x => x.value);
  el.innerHTML = Array.from({length:count},(_,i)=>`<label class="team-field"><span class="team-dot t${i}"></span><span class="sr-only">Team ${i+1} name</span><input maxlength="18" value="${esc(old[i]||`Team ${i+1}`)}" aria-label="Team ${i+1} name"></label>`).join('');
 }
@@ -89,6 +99,7 @@ function modal() {
  return `<div class="modal-backdrop"><section class="modal"><span class="modal-icon">&#127875;</span><h2>Start a new game?</h2><p>Your current game will be replaced. This cannot be undone.</p><button class="primary-btn" data-action="confirm-new">Yes, start fresh <span>&#8594;</span></button><button class="text-btn" data-action="close-modal">Keep playing</button></section></div>`;
 }
 function render() {
+ if(editorOpen){app.innerHTML=editor();return;}
  if(!state){app.innerHTML=setup();renderTeamInputs();return;}
  const page=state.phase==='board'?board():state.phase==='question'?question():state.phase==='choice'?choiceScreen():state.phase==='trick'?trickScreen():state.phase==='treat'?treat():results();
  app.innerHTML=page+modal();
@@ -98,7 +109,8 @@ function startGame() {
  const names=[...document.querySelectorAll('#teamInputs input')].map((x,i)=>x.value.trim()||`Team ${i+1}`);
  const score=Math.max(0,Number(document.querySelector('#startingScore').value)||0);
  const count=Math.min(20,Math.max(1,Number(document.querySelector('#pumpkinCount').value)||12));
- state={version:1,phase:'board',soundEnabled,teams:names.map((name,i)=>({id:`team-${i}`,name,score,skipTurns:0})),currentTeamId:'team-0',pumpkinCount:count,used:[],questionOrder:shuffle(QUESTIONS.map((_,i)=>i)),history:[],modal:null};
+ questionSource=document.querySelector('#questionSource')?.value||'built-in';localStorage.setItem(QUESTION_SOURCE_KEY,questionSource);const pool=questionSource==='custom'?customQuestions:QUESTIONS;if(!pool.length){notify('Add some questions first.');return;}
+ state={version:1,phase:'board',soundEnabled,questionPool:clone(pool),teams:names.map((name,i)=>({id:`team-${i}`,name,score,skipTurns:0})),currentTeamId:'team-0',pumpkinCount:count,used:[],questionOrder:shuffle(pool.map((_,i)=>i)),history:[],modal:null};
  save(state);render();
 }
 function advance() {
@@ -106,6 +118,11 @@ function advance() {
  selectedWords=[];selectedChoice=null;commit(next);
 }
 render();
+document.addEventListener('change',e=>{
+ if(e.target.id==='questionSource'){questionSource=e.target.value;localStorage.setItem(QUESTION_SOURCE_KEY,questionSource);}
+ if(e.target.id==='customType'){const choices=['vocab','grammar'].includes(e.target.value);document.querySelector('#customOptions').hidden=!choices;document.querySelector('#customFreeAnswer').hidden=choices;document.querySelector('#customPromptLabel').textContent=({build:'JAPANESE CLUE',vocab:'JAPANESE WORD OR MEANING',grammar:'ENGLISH SENTENCE WITH A BLANK',mistake:'SENTENCE WITH THE MISTAKE',translate:'JAPANESE SENTENCE TO TRANSLATE'})[e.target.value];}
+ if(e.target.id==='questionFile'&&e.target.files?.[0]){const file=e.target.files[0],reader=new FileReader();reader.onload=()=>{try{const list=parseQuestionSet(String(reader.result));if(customQuestions.length&&!confirm('Replace your current custom question set with this file?'))return;customQuestions=list;persistCustomQuestions();questionSource='custom';localStorage.setItem(QUESTION_SOURCE_KEY,'custom');editorOpen=true;render();notify('Question file uploaded.');}catch(err){notify(err.message||'Could not load that file.');}};reader.readAsText(file);e.target.value='';}
+});
 document.addEventListener('click', e => {
  const button=e.target.closest('[data-action]'); if(!button) return;
  const action=button.dataset.action;
@@ -116,6 +133,13 @@ document.addEventListener('click', e => {
   const count=document.querySelector('#teamCount');count.textContent=Math.max(2,Math.min(6,Number(count.textContent)+(action==='team-plus'?1:-1)));renderTeamInputs();return;
  }
  if(action==='start'){startGame();return;}
+ if(action==='open-editor'){editorOpen=true;render();return;}
+ if(action==='close-editor'){editorOpen=false;render();return;}
+ if(action==='use-custom-questions'){if(!customQuestions.length)return;questionSource='custom';localStorage.setItem(QUESTION_SOURCE_KEY,'custom');editorOpen=false;render();notify('Your question set is ready for the next game.');return;}
+ if(action==='add-custom-question'){try{customQuestions.push(makeCustomQuestion({type:document.querySelector('#customType').value,prompt:document.querySelector('#customPrompt').value.trim(),answer:document.querySelector('#customAnswer').value.trim(),choicesText:document.querySelector('#customChoiceList')?.value||'',answerIndex:document.querySelector('#customAnswerIndex')?.value||1,level:document.querySelector('#customLevel').value}));persistCustomQuestions();render();notify('Question added to your set.');}catch(err){notify(err.message);}return;}
+ if(action==='remove-custom-question'){customQuestions.splice(Number(button.dataset.i),1);persistCustomQuestions();if(!customQuestions.length)questionSource='built-in';render();notify('Question removed.');return;}
+ if(action==='download-questions'){if(!customQuestions.length){notify('Add a question before saving a file.');return;}downloadQuestionSet(customQuestions);notify('Question file downloaded.');return;}
+ if(action==='import-questions'){document.querySelector('#questionFile')?.click();return;}
  if(action==='pause'){state.modal='pause';save(state);render();return;}
  if(action==='resume'||action==='close-modal'){state.modal=null;save(state);render();return;}
  if(action==='new-game'){state.modal='new';render();return;}
@@ -134,7 +158,7 @@ document.addEventListener('click', e => {
  if(action==='choose-pumpkin'){
   const index=Number(button.dataset.index);if(state.used.includes(index))return;
   const questionIndex=state.questionOrder[state.used.length%state.questionOrder.length],next=clone(state);
-  next.used.push(index);next.selectedPumpkin=index;next.question=QUESTIONS[questionIndex];next.phase='question';next.resolved=null;next.answerRevealed=false;next.selectedChoice=null;
+  next.used.push(index);next.selectedPumpkin=index;next.question=(next.questionPool||QUESTIONS)[questionIndex];next.phase='question';next.resolved=null;next.answerRevealed=false;next.selectedChoice=null;
   selectedWords=[];selectedChoice=null;commit(next);return;
  }
  if(action==='add-word'){const i=Number(button.dataset.i);if(!selectedWords.includes(i))selectedWords.push(i);render();return;}
