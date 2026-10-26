@@ -15,7 +15,6 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
   const freeAnswer = editing && !['vocab', 'grammar'].includes(editing.type) ? editing.answer : '';
   const choiceText = choices.length ? choices.join('\n') : '';
   const choiceNumber = editing && ['vocab', 'grammar'].includes(editing.type) ? editing.answer + 1 : 1;
-  const explain = ['build', 'mistake'].includes(editing?.type || 'build');
   return `${headerMarkup}<main class="editor-screen">
     <div class="editor-heading"><span class="eyebrow orange">TEACHER TOOL</span><h1>Your <em>question book</em></h1>
     <p>Questions save on this device. Download a file to keep a backup or upload it later.</p></div>
@@ -26,7 +25,7 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
         </select></label>
         <label class="editor-field"><span id="customPromptLabel">${({'build':'JAPANESE CLUE',vocab:'JAPANESE WORD OR MEANING',grammar:'ENGLISH SENTENCE WITH A BLANK',mistake:'SENTENCE WITH THE MISTAKE',translate:'JAPANESE SENTENCE TO TRANSLATE'})[editing?.type || 'build']}</span><textarea id="customPrompt" rows="3" maxlength="240" placeholder="Write your question or clue">${escapeHtml(prompt)}</textarea></label>
         <label class="editor-field" id="customFreeAnswer" ${['vocab', 'grammar'].includes(editing?.type) ? 'hidden' : ''}><span>CORRECT ANSWER</span><textarea id="customAnswer" rows="2" maxlength="240" placeholder="Write the answer students should give">${escapeHtml(freeAnswer)}</textarea></label>
-        <label class="editor-field" id="customExplanationField" ${explain ? '' : 'hidden'}><span id="customExplanationLabel">${editing?.type === 'mistake' ? 'OPTIONAL GRAMMAR EXPLANATION · WHY IS IT WRONG?' : 'OPTIONAL GRAMMAR EXPLANATION'}</span><textarea id="customExplanation" rows="3" maxlength="500" placeholder="Explain the grammar rule in simple language (optional)">${escapeHtml(editing?.note || '')}</textarea></label>
+        <label class="editor-field" id="customExplanationField"><span id="customExplanationLabel">${editing?.type === 'mistake' ? 'OPTIONAL GRAMMAR EXPLANATION · WHY IS IT WRONG?' : 'OPTIONAL GRAMMAR EXPLANATION'}</span><textarea id="customExplanation" rows="3" maxlength="500" placeholder="Add a helpful explanation (optional)">${escapeHtml(editing?.note || '')}</textarea></label>
         <div id="customOptions" ${['vocab', 'grammar'].includes(editing?.type) ? '' : 'hidden'}>
           <label class="editor-field"><span>FOUR ANSWER CHOICES · ONE PER LINE</span><textarea id="customChoiceList" rows="4" placeholder="Write one answer choice on each line">${escapeHtml(choiceText)}</textarea></label>
           <label class="editor-field"><span>NUMBER OF CORRECT CHOICE (1–4)</span><input id="customAnswerIndex" type="number" min="1" max="4" value="${choiceNumber}"></label>
