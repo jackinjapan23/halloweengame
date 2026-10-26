@@ -87,6 +87,87 @@
 @media(max-width:600px){.round-leaderboard{padding:32px 14px 38px}.round-leaderboard h1{letter-spacing:-2px}.leaderboard-row{grid-template-columns:42px minmax(0,1fr) auto 58px;gap:8px;min-height:68px;padding:10px}.leaderboard-rank{width:36px;height:38px;border-radius:10px;font-size:15px}.leaderboard-movement{min-width:54px;padding:7px 4px;font-size:11px}.leaderboard-team small{font-size:8px}.leaderboard-score small{font-size:8px}.leaderboard-first .leaderboard-team small{color:#ffd28d}}
 @media(prefers-reduced-motion:reduce){.leaderboard-backdrop,.leaderboard-row{animation:none!important}}
 
+/* Fullscreen play: keep each game view inside the viewport without page scrolling */
+html:fullscreen,html:fullscreen body{width:100%;height:100%;min-height:0;overflow:hidden}
+html:fullscreen .app-shell{display:flex;flex-direction:column;width:100%;max-width:none;height:100dvh;min-height:0;margin:0;padding:0 clamp(10px,2vw,30px) 8px;overflow:hidden}
+html:fullscreen .topbar{flex:0 0 clamp(48px,7vh,72px);height:clamp(48px,7vh,72px);min-height:0}
+html:fullscreen #app>main{flex:1 1 auto;min-height:0;max-height:calc(100dvh - clamp(48px,7vh,72px) - 10px)}
+html:fullscreen .game-layout{grid-template-columns:minmax(0,1fr) clamp(190px,22vw,270px);gap:clamp(12px,2vw,26px);height:calc(100dvh - clamp(48px,7vh,72px) - 54px);min-height:0;padding:clamp(8px,1.5vh,16px) 0;overflow:hidden}
+html:fullscreen .board-area{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+html:fullscreen .turn-banner h1{font-size:clamp(25px,4vh,38px)}
+html:fullscreen .board-instruction{flex:none;margin-top:clamp(8px,1.5vh,16px);padding:9px 12px}
+html:fullscreen .pumpkin-grid{flex:1;grid-auto-rows:minmax(0,1fr);min-height:0;margin-top:clamp(8px,1.5vh,14px);gap:clamp(6px,1vw,12px)}
+html:fullscreen .pumpkin-tile{min-height:0;padding:4px}
+html:fullscreen .game-layout>.score-panel,html:fullscreen .question-sidebar>.score-panel{min-height:0;overflow:hidden}
+html:fullscreen .score-list{min-height:0}
+html:fullscreen .score-row{padding:clamp(5px,1vh,10px) 8px}
+html:fullscreen .game-footer{flex:none;height:38px;padding:4px 0;font-size:10px}
+html:fullscreen .question-layout{grid-template-columns:clamp(180px,21vw,235px) minmax(0,1fr);gap:clamp(10px,1.5vw,20px);height:calc(100dvh - clamp(48px,7vh,72px) - 8px);min-height:0;padding:8px 0;overflow:hidden}
+html:fullscreen .question-sidebar{position:static;min-height:0;overflow:hidden}
+html:fullscreen .question-card{height:100%;min-height:0;overflow:hidden;padding:clamp(12px,2.3vh,26px) clamp(14px,2vw,30px)}
+html:fullscreen .question-meta{padding-bottom:8px}
+html:fullscreen .question-team{margin:clamp(8px,1.5vh,16px) 0}
+html:fullscreen .jp-prompt{margin:clamp(8px,1.5vh,16px) 0;padding:clamp(12px,2vh,22px)}
+html:fullscreen .prompt-text{font-size:clamp(25px,4.2vh,48px);margin:clamp(10px,2vh,24px) 0;line-height:1.14}
+html:fullscreen .choice-grid{gap:clamp(6px,1vh,12px)}
+html:fullscreen .choice-btn{min-height:clamp(48px,8vh,70px);padding:clamp(8px,1.5vh,14px);font-size:clamp(15px,2.1vh,21px)}
+html:fullscreen .question-controls{margin-top:auto;padding-top:clamp(8px,1.5vh,16px)}
+html:fullscreen .answer-zone{padding:10px;min-height:62px}
+html:fullscreen .word-chip{padding:8px 11px;font-size:14px}
+html:fullscreen .choice-screen,html:fullscreen .trick-screen{height:calc(100dvh - clamp(48px,7vh,72px) - 8px);min-height:0;justify-content:space-evenly;gap:clamp(4px,1vh,10px);padding:clamp(10px,2vh,22px)}
+html:fullscreen .choice-screen h1,html:fullscreen .trick-screen h1{font-size:clamp(38px,7vh,76px);margin:6px 0}
+html:fullscreen .fate-options{width:min(100%,760px);gap:clamp(8px,1.5vw,18px)}
+html:fullscreen .fate-card{min-height:0;height:clamp(190px,40vh,320px);padding:clamp(14px,2vh,24px)}
+html:fullscreen .fate-art{font-size:clamp(48px,9vh,78px);margin-bottom:clamp(5px,1vh,12px)}
+html:fullscreen .choice-subtitle{margin:4px 0 10px}
+html:fullscreen .choice-score{margin:5px 0 0}
+html:fullscreen .big-candy-bag{width:clamp(120px,22vh,190px);height:clamp(120px,22vh,190px);margin:0 auto}
+html:fullscreen .bag-emoji{font-size:clamp(60px,12vh,92px)}
+html:fullscreen .trick-prize{margin:0 0 6px}
+html:fullscreen .trick-continue{margin:0 auto}
+html:fullscreen .treat-screen:not(.has-reveal){height:calc(100dvh - clamp(48px,7vh,72px) - 8px);min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;gap:clamp(4px,1vh,10px);padding:clamp(8px,1.5vh,16px) 0;overflow:hidden}
+html:fullscreen .treat-top h1{font-size:clamp(34px,6vh,62px);margin:4px 0}
+html:fullscreen .treat-top p{margin:4px 0}
+html:fullscreen .treat-grid{flex:1;min-height:0;grid-auto-rows:minmax(0,1fr);margin:clamp(6px,1vh,12px) auto;gap:clamp(6px,1vw,12px)}
+html:fullscreen .treat-card{min-height:0;padding:clamp(6px,1vh,12px)}
+html:fullscreen .treat-object{font-size:clamp(28px,6vh,50px)}
+html:fullscreen .treat-card strong{font-size:clamp(12px,1.8vh,17px)}
+html:fullscreen .treat-card small{font-size:clamp(10px,1.5vh,13px)}
+html:fullscreen .treat-screen.has-reveal{height:100dvh;min-height:0;overflow:hidden;padding:clamp(8px,1.5vh,16px) clamp(10px,3vw,38px);gap:clamp(3px,.6vh,8px)}
+html:fullscreen .event-reveal{padding:clamp(8px,1.5vh,18px) 2vw}
+html:fullscreen .event-icon{font-size:clamp(70px,16vh,170px);margin:2px}
+html:fullscreen .event-reveal h1{font-size:clamp(38px,7.5vh,82px);margin:2px 0 6px}
+html:fullscreen .event-description{font-size:clamp(14px,2.1vh,21px);line-height:1.25}
+html:fullscreen .event-score-impact{margin-top:clamp(4px,1vh,10px);padding:clamp(7px,1vh,12px) 18px;font-size:clamp(18px,3.6vh,38px)}
+html:fullscreen .event-total{margin-top:4px}
+html:fullscreen .has-reveal .target-picker{margin:2px auto;padding:5px 10px}
+html:fullscreen .has-reveal .score-panel{max-height:18vh;overflow:hidden}
+html:fullscreen .has-reveal .score-list{display:flex;flex-wrap:wrap;gap:4px}
+html:fullscreen .has-reveal .score-row{min-width:140px;flex:1}
+html:fullscreen .has-reveal .event-continue{padding:10px 18px;margin:2px auto}
+html:fullscreen .round-leaderboard{height:calc(100dvh - clamp(48px,7vh,72px) - 8px);min-height:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(6px,1vh,12px) 12px;overflow:hidden}
+html:fullscreen .round-leaderboard h1{font-size:clamp(38px,7vh,74px);margin:3px 0}
+html:fullscreen .leaderboard-intro{margin:2px auto clamp(5px,1vh,10px);font-size:clamp(12px,1.7vh,17px)}
+html:fullscreen .leaderboard-table{flex:0 1 auto;min-height:0;gap:clamp(3px,.6vh,6px);margin:0 auto clamp(5px,1vh,10px)}
+html:fullscreen .leaderboard-row{min-height:0;height:clamp(42px,8vh,64px);padding:4px 12px;gap:10px}
+html:fullscreen .leaderboard-rank{width:36px;height:36px;font-size:14px}
+html:fullscreen .leaderboard-team strong{font-size:clamp(14px,1.8vh,18px)}
+html:fullscreen .leaderboard-team small{font-size:8px;margin-top:2px}
+html:fullscreen .leaderboard-score{font-size:clamp(17px,2.5vh,24px)}
+html:fullscreen .leaderboard-continue{width:min(360px,100%);padding:10px 16px}
+html:fullscreen .results-screen{height:calc(100dvh - clamp(48px,7vh,72px) - 8px);min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(3px,.8vh,8px);padding:clamp(6px,1vh,14px);overflow:hidden}
+html:fullscreen .results-screen h1{font-size:clamp(38px,7vh,72px);margin:4px 0}
+html:fullscreen .winner-name{font-size:clamp(22px,4vh,38px)}
+html:fullscreen .winner-candy{margin:0}
+html:fullscreen .final-scores{width:min(680px,100%);margin:4px auto;padding:clamp(8px,1vh,14px)}
+html:fullscreen .final-scores h2{margin:0 0 4px}
+html:fullscreen .final-row{min-height:clamp(28px,4.8vh,42px);padding:3px 8px}
+html:fullscreen .results-screen>.primary-btn{width:min(380px,100%);padding:10px 16px}
+html:fullscreen .results-screen .microcopy{margin:0}
+html:fullscreen .modal-backdrop{position:fixed;inset:0;overflow:hidden}
+@media(max-width:760px){html:fullscreen .app-shell{padding:0 8px 5px}html:fullscreen .game-layout{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}.game-layout>.score-panel{max-height:18vh;display:block}.game-layout>.score-panel .score-list{display:flex;gap:4px;overflow:hidden}.game-layout>.score-panel .score-row{min-width:95px;flex:1;padding:4px}.game-layout>.score-panel .score-footer,html:fullscreen .game-layout>.score-panel .panel-title{display:none}html:fullscreen .question-layout{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:5px}.question-sidebar{order:2;max-height:62px}.question-sidebar .score-panel .panel-title,.question-sidebar .score-footer,.question-progress{display:none}.question-sidebar .score-panel{display:block}.question-sidebar .score-list{display:flex;gap:3px;overflow:hidden}.question-sidebar .score-row{flex:1;min-width:0;padding:3px 4px}.question-sidebar .score-team{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.question-sidebar .score-row>strong{font-size:12px}.question-card{order:1;width:100%;height:100%;padding:10px}.question-team{margin:5px 0}.question-team .pumpkin{display:none}.question-meta{padding-bottom:3px}.prompt-text{font-size:clamp(22px,4.5vh,34px);margin:8px 0}.jp-prompt{margin:8px 0;padding:9px}.jp-prompt strong{font-size:clamp(22px,4vh,32px)}.choice-grid{gap:5px}.choice-btn{min-height:clamp(38px,7vh,55px);padding:6px;font-size:clamp(13px,2vh,17px)}.question-controls{padding-top:5px;margin-top:auto}.wrong-btn,.right-btn,.outline-btn{padding:9px 12px;font-size:12px}.resolved-note{padding:8px;font-size:13px}.fate-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.fate-card{height:clamp(160px,33vh,250px);padding:8px}.fate-art{font-size:clamp(40px,8vh,60px)}.fate-card strong{font-size:clamp(24px,5vh,36px)}html:fullscreen .treat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.trick-screen .choice-score{margin:0}.has-reveal .score-row{min-width:0}}
+@media(max-height:650px){html:fullscreen .topbar{flex-basis:44px;height:44px}html:fullscreen .icon-btn{padding:6px 8px}html:fullscreen .brand small{display:none}html:fullscreen .turn-banner h1{font-size:24px}html:fullscreen .turn-candy b{font-size:16px}html:fullscreen .leaderboard-row{height:38px}html:fullscreen .round-leaderboard h1{font-size:36px}html:fullscreen .event-icon{font-size:68px}html:fullscreen .big-candy-bag{width:100px;height:100px}html:fullscreen .fate-card{height:150px}}
+
 /* Clear side-by-side correction for mistake questions */
 .mistake-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:clamp(24px,4vh,42px) 0 18px}
 .mistake-line{min-width:0;padding:clamp(16px,2vw,24px);border:1px solid #ffffff20;border-radius:16px;background:#ffffff08;text-align:left}
@@ -103,3 +184,55 @@
 .mistake-explanation>span{color:#ffc095}
 .mistake-explanation p{margin:0;color:#eee5ef;font-size:clamp(16px,1.7vw,21px);line-height:1.55}
 @media(max-width:650px){.mistake-comparison{grid-template-columns:1fr;gap:10px;margin:24px 0 14px}.mistake-line p{font-size:21px}.mistake-explanation{padding:15px 17px}}
+
+/* Keep the mobile fullscreen overrides scoped to fullscreen, and put the question first. */
+@media(max-width:760px){
+ html:fullscreen .game-layout{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+ html:fullscreen .game-layout>.score-panel{max-height:18vh;display:block}
+ html:fullscreen .game-layout>.score-panel .score-list{display:flex;gap:4px;overflow:hidden}
+ html:fullscreen .game-layout>.score-panel .score-row{min-width:0;flex:1;padding:4px}
+ html:fullscreen .game-layout>.score-panel .score-footer,html:fullscreen .game-layout>.score-panel .panel-title{display:none}
+ html:fullscreen .question-layout{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:5px}
+ html:fullscreen .question-card{grid-row:1;order:0;width:100%;height:100%;padding:8px 10px}
+ html:fullscreen .question-sidebar{grid-row:2;order:0;max-height:56px}
+ html:fullscreen .question-sidebar .score-panel .panel-title,html:fullscreen .question-sidebar .score-footer,html:fullscreen .question-progress{display:none}
+ html:fullscreen .question-sidebar .score-panel{display:block;padding:3px 6px}
+ html:fullscreen .question-sidebar .score-list{display:flex;gap:3px;overflow:hidden;margin:0}
+ html:fullscreen .question-sidebar .score-row{flex:1;min-width:0;padding:2px 4px}
+ html:fullscreen .question-sidebar .score-team{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ html:fullscreen .question-sidebar .score-row>strong{font-size:12px}
+ html:fullscreen .question-team{margin:4px 0}
+ html:fullscreen .question-team .pumpkin{display:none}
+ html:fullscreen .question-meta{padding-bottom:3px}
+ html:fullscreen .prompt-text{font-size:clamp(21px,4.2vh,34px);margin:6px 0;line-height:1.15}
+ html:fullscreen .jp-prompt{margin:5px 0;padding:7px}
+ html:fullscreen .jp-prompt strong{font-size:clamp(20px,3.8vh,30px)}
+ html:fullscreen .choice-grid{gap:4px}
+ html:fullscreen .choice-btn{min-height:clamp(36px,6.4vh,54px);padding:5px;font-size:clamp(12px,1.8vh,16px)}
+ html:fullscreen .question-controls{padding-top:4px;margin-top:auto}
+ html:fullscreen .wrong-btn,html:fullscreen .right-btn,html:fullscreen .outline-btn{padding:7px 9px;font-size:11px}
+ html:fullscreen .resolved-note{padding:6px;font-size:12px}
+ html:fullscreen .mistake-comparison{gap:6px;margin:6px 0}
+ html:fullscreen .mistake-line{padding:8px}
+ html:fullscreen .mistake-line p{font-size:clamp(15px,2.1vh,20px)}
+ html:fullscreen .mistake-explanation{margin:0 0 6px;padding:7px 9px}
+ html:fullscreen .mistake-explanation p{font-size:clamp(12px,1.7vh,16px)}
+ html:fullscreen .fate-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ html:fullscreen .fate-card{height:clamp(150px,34vh,250px);padding:8px}
+ html:fullscreen .fate-art{font-size:clamp(38px,8vh,60px)}
+ html:fullscreen .fate-card strong{font-size:clamp(22px,5vh,36px)}
+ html:fullscreen .treat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ html:fullscreen .trick-screen .choice-score{margin:0}
+ html:fullscreen .has-reveal .score-row{min-width:0}
+}
+@media(max-height:520px){
+ html:fullscreen .topbar{height:42px;flex-basis:42px}
+ html:fullscreen .brand small{display:none}
+ html:fullscreen .turn-banner h1{font-size:24px}
+ html:fullscreen .event-icon{font-size:60px}
+ html:fullscreen .big-candy-bag{width:90px;height:90px}
+ html:fullscreen .fate-card{height:140px}
+ html:fullscreen .question-card{padding-top:6px;padding-bottom:6px}
+ html:fullscreen .question-team{margin:2px 0}
+ html:fullscreen .question-controls{padding-top:2px}
+}
