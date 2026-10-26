@@ -18,6 +18,7 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup) {
         </select></label>
         <label class="editor-field"><span id="customPromptLabel">JAPANESE CLUE</span><textarea id="customPrompt" rows="3" maxlength="240" placeholder="Write your question or clue"></textarea></label>
         <label class="editor-field" id="customFreeAnswer"><span>CORRECT ANSWER</span><textarea id="customAnswer" rows="2" maxlength="240" placeholder="Write the answer students should give"></textarea></label>
+        <label class="editor-field" id="customExplanationField"><span id="customExplanationLabel">OPTIONAL GRAMMAR EXPLANATION</span><textarea id="customExplanation" rows="3" maxlength="500" placeholder="Explain the grammar rule in simple language (optional)"></textarea></label>
         <div id="customOptions" hidden>
           <label class="editor-field"><span>FOUR ANSWER CHOICES · ONE PER LINE</span><textarea id="customChoiceList" rows="4" placeholder="Write one answer choice on each line"></textarea></label>
           <label class="editor-field"><span>NUMBER OF CORRECT CHOICE (1–4)</span><input id="customAnswerIndex" type="number" min="1" max="4" value="1"></label>
@@ -36,7 +37,7 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup) {
   </main>`;
 }
 
-export function makeCustomQuestion({ type, prompt, answer, choicesText, answerIndex, level }) {
+export function makeCustomQuestion({ type, prompt, answer, choicesText, answerIndex, level, explanation = '' }) {
   if (!prompt || ((!['vocab', 'grammar'].includes(type)) && !answer)) throw new Error('Please fill in the question and correct answer.');
   const q = { id: `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, type, level, answer };
   if (type === 'build') { q.jp = prompt; q.words = answer.split(/\s+/).filter(Boolean).sort(() => Math.random() - 0.5); }
@@ -48,6 +49,7 @@ export function makeCustomQuestion({ type, prompt, answer, choicesText, answerIn
     if (type === 'vocab') q.jp = prompt; else q.prompt = prompt;
   } else if (type === 'mistake') q.prompt = prompt;
   else q.jp = prompt;
+  if (explanation.trim()) q.note = explanation.trim();
   return q;
 }
 
