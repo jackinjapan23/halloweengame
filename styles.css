@@ -213,7 +213,8 @@ html:fullscreen .intro-content{padding:8px 16px 26px}
 html:fullscreen .intro-content h1{font-size:clamp(58px,12vh,116px)}
 html:fullscreen .intro-pumpkin{font-size:clamp(60px,12vh,105px)}
 html:fullscreen .setup-layout{height:100%;min-height:0;padding:clamp(8px,2vh,20px) clamp(8px,2vw,24px);gap:clamp(12px,3vw,40px)}
-html:fullscreen .setup-card{max-height:100%;overflow:hidden}
+html:fullscreen .setup-card{max-height:calc(100dvh - 64px);overflow-y:auto;overscroll-behavior:contain}
+html:fullscreen .setup-card .start-btn{position:sticky;bottom:0;z-index:2;box-shadow:0 -8px 18px #1d1c23,0 8px 24px #ff74311c}
 html:fullscreen .question-card{display:flex;flex-direction:column}
 html:fullscreen .question-hint-area{margin:5px 0}
 html:fullscreen .question-hint{padding:7px 10px}
@@ -227,6 +228,7 @@ html:fullscreen .odds-groups section{padding:6px}
 html:fullscreen .odds-row{padding:3px 0;font-size:10px}
 html:fullscreen .odds-row input{height:24px}
 @media(max-height:680px){html:fullscreen .setup-card{padding:8px 12px}html:fullscreen .setup-card .card-heading{margin-bottom:8px}html:fullscreen .setup-card .card-heading h2{font-size:19px}html:fullscreen .setup-card .stepper{margin:4px 0 7px}html:fullscreen .setup-card .team-inputs{margin-bottom:8px}html:fullscreen .setup-card .team-field{height:30px}html:fullscreen .setup-card .question-source-block{margin-top:7px}html:fullscreen .setup-card .odds-settings{margin:5px 0;padding:6px}html:fullscreen .setup-card .odds-settings>p{margin:4px 0;font-size:9px}html:fullscreen .setup-card .odds-groups{margin-top:3px}html:fullscreen .setup-card .odds-groups section{padding:3px}html:fullscreen .setup-card .odds-groups h3{margin-bottom:3px;font-size:9px}html:fullscreen .setup-card .odds-row{padding:1px 0;font-size:8px}html:fullscreen .setup-card .odds-row input{height:20px;width:42px}html:fullscreen .setup-card .odds-row{grid-template-columns:minmax(0,1fr) 42px 30px}html:fullscreen .setup-card .start-btn{margin-top:6px;padding:9px 12px}html:fullscreen .setup-card .microcopy{margin:4px 0}}
+@media(max-height:820px){html:fullscreen .setup-layout{padding-top:5px;padding-bottom:5px}html:fullscreen .setup-card{padding:14px 18px}html:fullscreen .setup-card .setup-back{margin:0 0 3px}html:fullscreen .setup-card .card-heading{margin-bottom:10px}html:fullscreen .setup-card .team-inputs{gap:5px;margin-bottom:9px}html:fullscreen .setup-card .team-field{height:32px}html:fullscreen .setup-card .field-grid{gap:8px}html:fullscreen .setup-card .input-wrap input{height:36px}html:fullscreen .setup-card .question-source-block{margin-top:8px}html:fullscreen .setup-card .start-btn{margin-top:10px;padding:10px 14px}}
 
 /* Preserve the regular mobile layout outside fullscreen. */
 @media(max-width:760px){
@@ -326,3 +328,4 @@ html:fullscreen .odds-row input{height:24px}
  html:fullscreen .question-team{margin:2px 0}
  html:fullscreen .question-controls{padding-top:2px}
 }
+.editor-field>small{display:block;margin-top:6px;color:#99919e;font-size:10px;line-height:1.45}
