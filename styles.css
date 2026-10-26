@@ -41,6 +41,26 @@
 .set-name-field input:focus{outline:none;border-color:#ff915e;box-shadow:0 0 0 3px #ff915e1c}
 .cancel-edit-btn{width:100%;margin-top:9px}
 
+/* Teacher-editable prize chances and readable odds during play */
+.odds-settings{margin:12px 0 16px;padding:12px 14px;border:1px solid #ff9b6340;border-radius:12px;background:#ff9b630b}
+.odds-settings>summary,.player-odds>summary{color:#ffc095;font-size:13px;font-weight:800;cursor:pointer}
+.odds-settings>p{margin:9px 0;color:#aba2b0;font-size:11px;line-height:1.5}
+.odds-groups{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.odds-groups section{padding:11px;border:1px solid #ffffff14;border-radius:9px;background:#11111770}
+.odds-groups h3{margin:0 0 8px;color:#ffb17e;font-size:10px;letter-spacing:1px}
+.odds-row{display:grid;grid-template-columns:minmax(0,1fr) 58px 38px;align-items:center;gap:6px;padding:5px 0;border-top:1px solid #ffffff0c;color:#eee6ef;font-size:11px}
+.odds-row input{width:58px;height:30px;border:1px solid #ffffff20;border-radius:6px;background:#0e0d12;color:#fff;text-align:center;font:700 12px 'DM Sans',sans-serif}
+.odds-row b{color:#ffd08a;text-align:right;font-size:11px}
+.odds-save-note{font-size:10px!important}
+.player-odds{width:min(520px,92vw);margin:14px auto;color:#d9d0dd;text-align:left}
+.player-odds>summary{width:fit-content;margin:0 auto;padding:7px 12px;border:1px solid #ffffff24;border-radius:999px;background:#ffffff08;font-size:11px}
+.player-odds-list{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin-top:8px;padding:10px 13px;border:1px solid #ffffff18;border-radius:10px;background:#100e15;font-size:11px}
+.player-odds-list span{display:flex;justify-content:space-between;gap:8px;padding:3px 0}
+.player-odds-list b,.revealed-odds{color:#ffd08a}
+.revealed-odds{display:block;width:100%;font-size:12px;font-weight:800}
+.choice-screen .player-odds{position:relative;z-index:1;margin:9px auto}
+@media(max-width:700px){.odds-groups{grid-template-columns:1fr}.player-odds-list{grid-template-columns:1fr}.odds-settings{padding:10px}}
+
 /* Clear side-by-side correction for mistake questions */
 .mistake-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:clamp(24px,4vh,42px) 0 18px}
 .mistake-line{min-width:0;padding:clamp(16px,2vw,24px);border:1px solid #ffffff20;border-radius:16px;background:#ffffff08;text-align:left}
