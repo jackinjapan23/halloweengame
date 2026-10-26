@@ -20,8 +20,13 @@ if(reducedMotion) document.documentElement.classList.add('reduce-motion');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const current = () => state?.teams.find(t => t.id === state.currentTeamId);
 function commit(next, undo = true) {
-  if (undo && state) next.history = [...(state.history || []), clone(state)].slice(-30);
+  if (undo && state) recordHistory(next, state);
   state = next; save(state); render();
+}
+function recordHistory(next, previous) {
+  const snapshot = clone(previous);
+  delete snapshot.history;
+  next.history = [...(previous.history || []), snapshot].slice(-30);
 }
 function notify(message) {
   toastEl.textContent = message; toastEl.classList.add('show'); clearTimeout(toastTimer);
@@ -173,7 +178,7 @@ document.addEventListener('click', e => {
  }
  if(action==='choose-trick'){
   const next=clone(state),reward=[10,20,30,50][Math.floor(Math.random()*4)],icons=['&#127852;','&#127853;','&#127851;','&#127852;'];
-  const team=next.teams.find(t=>t.id===next.currentTeamId);team.score+=reward;next.trickReward={points:reward,icon:icons[Math.floor(Math.random()*icons.length)]};next.phase='trick';next.history=[...(state.history||[]),clone(state)].slice(-30);commit(next,false);playSound('trick');return;
+  const team=next.teams.find(t=>t.id===next.currentTeamId);team.score+=reward;next.trickReward={points:reward,icon:icons[Math.floor(Math.random()*icons.length)]};next.phase='trick';recordHistory(next,state);commit(next,false);playSound('trick');return;
  }
  if(action==='choose-treat'){
   const next=clone(state);next.phase='treat';next.cards=shuffle(OUTCOMES).slice(0,6);next.outcome=null;next.chosenCard=null;next.effectApplied=false;commit(next);return;
@@ -183,12 +188,12 @@ document.addEventListener('click', e => {
   if(state.outcome)return;playSound('reveal');
   const before=clone(state),index=Number(button.dataset.i),outcome=before.cards[index];
   if(['swap','steal'].includes(outcome.effect)){state.outcome=outcome;state.chosenCard=index;state.effectApplied=false;state.eventImpact='CHOOSE A TEAM TO REVEAL THE CONSEQUENCE';save(state);render();return;}
-  const next=applyOutcome(before,outcome);next.outcome=outcome;next.chosenCard=index;next.cards=before.cards;next.eventImpact=effectMessage(outcome,before,next);next.effectApplied=true;next.history=[...(before.history||[]),before].slice(-30);commit(next,false);notify('Outcome revealed. Scores updated.');return;
+  const next=applyOutcome(before,outcome);next.outcome=outcome;next.chosenCard=index;next.cards=before.cards;next.eventImpact=effectMessage(outcome,before,next);next.effectApplied=true;recordHistory(next,before);commit(next,false);notify('Outcome revealed. Scores updated.');return;
  }
  if(action==='apply-target'){
   if(state.effectApplied)return;
   const targetId=document.querySelector('#targetTeam').value;if(!targetId){notify('Choose a team first.');return;}
-  const before=clone(state),next=applyOutcome(before,before.outcome,targetId);next.eventImpact=effectMessage(before.outcome,before,next,targetId);next.outcome=before.outcome;next.chosenCard=before.chosenCard;next.cards=before.cards;next.effectApplied=true;next.history=[...(before.history||[]),before].slice(-30);commit(next,false);notify('Effect applied. Scores updated.');return;
+  const before=clone(state),next=applyOutcome(before,before.outcome,targetId);next.eventImpact=effectMessage(before.outcome,before,next,targetId);next.outcome=before.outcome;next.chosenCard=before.chosenCard;next.cards=before.cards;next.effectApplied=true;recordHistory(next,before);commit(next,false);notify('Effect applied. Scores updated.');return;
  }
  if(action==='finish-treat'){if(state.effectApplied)advance();return;}
 });
