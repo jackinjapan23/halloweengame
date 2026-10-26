@@ -50,6 +50,17 @@ function playSound(kind='reveal') {
  if(!soundEnabled)return;
  try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ctx=new AC(),osc=ctx.createOscillator(),gain=ctx.createGain();const notes=kind==='correct'?[523,659,784]:kind==='trick'?[240,180,660]:[392,587,784];osc.type=kind==='trick'?'triangle':'sine';osc.frequency.setValueAtTime(notes[0],ctx.currentTime);notes.slice(1).forEach((n,i)=>osc.frequency.setValueAtTime(n,ctx.currentTime+.09*(i+1)));gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.12,ctx.currentTime+.025);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.32);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.34);osc.onended=()=>ctx.close()}catch{}
 }
+function playPrizeSound(prize) {
+ if(!soundEnabled)return;
+ const profiles={jackpot:['triangle',[523,659,784,1047],.075],blessing:['sine',[392,523,659],.12],gift:['triangle',[440,554,659,880],.09],golden:['sine',[659,831,988,1318],.08],vampire:['sawtooth',[330,247,165,110],.09],skeleton:['square',[440,220,370,147],.065],swap:['triangle',[220,660,330,880],.075],heist:['sawtooth',[392,294,220,147],.1],mayhem:['triangle',[523,784,659,988,784,1175],.065],haunted:['sawtooth',[110,116,98,82],.16]};
+ const profile=profiles[prize];if(!profile){playSound('reveal');return;}
+ try{
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  const [wave,notes,step]=profile,ctx=new AC(),start=ctx.currentTime;
+  notes.forEach((frequency,index)=>{const at=start+index*step,osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=wave;osc.frequency.setValueAtTime(frequency,at);gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(['vampire','haunted'].includes(prize)?.055:.09,at+.012);gain.gain.exponentialRampToValueAtTime(.0001,at+.18);osc.connect(gain);gain.connect(ctx.destination);osc.start(at);osc.stop(at+.19);osc.onended=()=>{if(index===notes.length-1)setTimeout(()=>ctx.close(),240)}});
+  if(['vampire','skeleton','heist','haunted'].includes(prize)){const length=Math.floor(ctx.sampleRate*.28),buffer=ctx.createBuffer(1,length,ctx.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*(1-i/length);const noise=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();noise.buffer=buffer;filter.type='lowpass';filter.frequency.value=prize==='skeleton'?900:420;gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(prize==='skeleton'?.1:.07,start+.018);gain.gain.exponentialRampToValueAtTime(.0001,start+.26);noise.connect(filter);filter.connect(gain);gain.connect(ctx.destination);noise.start(start);noise.stop(start+.27)}
+ }catch{}
+}
 const pumpkin = (n, used = false) => `<span class="pumpkin ${used?'is-used':''}"><span class="pumpkin-shape">&#127875;</span><b>${String(n).padStart(2,'0')}</b></span>`;
 function header() {
  return `<header class="topbar"><a class="brand" href="#"><span class="brand-icon">&#127875;</span><span><strong>MIDNIGHT CANDY</strong><small>A LITTLE ENGLISH. A LOT OF HALLOWEEN.</small></span></a><div class="top-actions"><button class="icon-btn" data-action="sound-toggle" aria-pressed="${soundEnabled}">${soundEnabled?'&#128266;':'&#128263;'} <span>Sound ${soundEnabled?'on':'off'}</span></button><button class="icon-btn" data-action="motion-toggle" aria-pressed="${reducedMotion}">&#10024; <span>Motion ${reducedMotion?'reduced':'full'}</span></button><button class="icon-btn" data-action="fullscreen">&#x26F6; <span>Full screen</span></button>${state&&state.phase!=='setup'?'<button class="icon-btn" data-action="pause">&#x275A;&#x275A; <span>Pause</span></button>':''}</div></header>`;
@@ -204,10 +215,10 @@ document.addEventListener('click', e => {
  }
  if(action==='finish-trick'){advance();return;}
  if(action==='pick-treat'){
-  if(state.outcome)return;playSound('reveal');
+  if(state.outcome)return;
   const before=clone(state),index=Number(button.dataset.i),outcome=before.cards[index];
-  if(['swap','steal'].includes(outcome.effect)){state.outcome=outcome;state.chosenCard=index;state.effectApplied=false;state.eventImpact='CHOOSE A TEAM TO REVEAL THE CONSEQUENCE';save(state);render();return;}
-  const next=applyOutcome(before,outcome);next.outcome=outcome;next.chosenCard=index;next.cards=before.cards;next.eventImpact=effectMessage(outcome,before,next);next.effectApplied=true;recordHistory(next,before);commit(next,false);notify('Outcome revealed. Scores updated.');return;
+  if(['swap','steal'].includes(outcome.effect)){state.outcome=outcome;state.chosenCard=index;state.effectApplied=false;state.eventImpact='CHOOSE A TEAM TO REVEAL THE CONSEQUENCE';save(state);render();playPrizeSound(outcome.id);return;}
+  const next=applyOutcome(before,outcome);next.outcome=outcome;next.chosenCard=index;next.cards=before.cards;next.eventImpact=effectMessage(outcome,before,next);next.effectApplied=true;recordHistory(next,before);commit(next,false);playPrizeSound(outcome.id);notify('Outcome revealed. Scores updated.');return;
  }
  if(action==='apply-target'){
   if(state.effectApplied)return;
