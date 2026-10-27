@@ -51,8 +51,8 @@
 .odds-row{display:grid;grid-template-columns:minmax(0,1fr) 58px 38px;align-items:center;gap:6px;padding:5px 0;border-top:1px solid #ffffff0c;color:#eee6ef;font-size:11px}
 .odds-row input{width:58px;height:30px;border:1px solid #ffffff20;border-radius:6px;background:#0e0d12;color:#fff;text-align:center;font:700 12px 'DM Sans',sans-serif}
 .odds-row b{color:#ffd08a;text-align:right;font-size:11px}
-.odds-save-note{font-size:10px!important}
-@media(max-width:700px){.odds-groups{grid-template-columns:1fr}.odds-settings{padding:10px}}
+.odds-save-note{font-size:10px!important}.odds-footer{display:flex;align-items:center;justify-content:space-between;gap:12px}.odds-footer .odds-save-note{margin:9px 0}.odds-footer .outline-btn{flex:none}
+@media(max-width:700px){.odds-groups{grid-template-columns:1fr}.odds-settings{padding:10px}.odds-footer{align-items:stretch;flex-direction:column}.odds-footer .outline-btn{width:100%}}
 
 /* Full-screen standings reveal between completed team rounds */
 .round-leaderboard{position:relative;isolation:isolate;min-height:calc(100vh - 78px);padding:clamp(30px,6vh,70px) 20px 50px;overflow:hidden;text-align:center;background:radial-gradient(ellipse at 50% 12%,#7f3a492c,transparent 42%),#100e15}
