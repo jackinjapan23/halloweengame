@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-labelledby="title desc">
+  <title id="title">A haunted house on a hill</title>
+  <desc id="desc">A small crooked house with two softly flickering golden windows on a moonlit hill.</desc>
+  <defs>
+    <linearGradient id="hill" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#383044"/>
+      <stop offset="1" stop-color="#17151d"/>
+    </linearGradient>
+    <linearGradient id="house" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#302837"/>
+      <stop offset="1" stop-color="#17151b"/>
+    </linearGradient>
+    <filter id="window-glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .lit-window { animation: flicker 6s infinite; }
+      .lit-window.second { animation-delay: 2.7s; }
+      @keyframes flicker {
+        0%, 19%, 23%, 63%, 68%, 100% { opacity: 1; }
+        20%, 22%, 65%, 67% { opacity: .2; }
+      }
+      @media (prefers-reduced-motion: reduce) { .lit-window { animation: none; } }
+      .reduce-motion .lit-window { animation: none; }
+    </style>
+  </defs>
+
+  <circle cx="177" cy="30" r="14" fill="#f4d9aa" opacity=".9"/>
+  <circle cx="183" cy="25" r="13" fill="#211d29"/>
+  <path d="M11 132 Q55 104 91 105 Q111 83 134 103 Q172 98 209 132 L216 146 H5Z" fill="url(#hill)"/>
+  <path d="M31 132 Q67 111 94 112 M137 112 Q166 106 190 129" fill="none" stroke="#69566e" stroke-width="2" opacity=".5"/>
+
+  <path d="M76 76 L108 48 L143 76 L140 119 L79 119Z" fill="url(#house)" stroke="#827087" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M69 77 L108 43 L149 77 L142 81 L108 53 L76 82Z" fill="#4b3b50" stroke="#947b91" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M129 62 L137 57 L137 75" fill="#29222e" stroke="#75617a" stroke-width="2"/>
+  <path d="M103 95 Q108 88 114 95 V119 H103Z" fill="#100f15" stroke="#594c60" stroke-width="1.5"/>
+  <circle cx="112" cy="106" r="1.2" fill="#e6b86c"/>
+
+  <g filter="url(#window-glow)">
+    <path class="lit-window" d="M85 86 H97 V99 H85Z" fill="#ffc76b" stroke="#d99449" stroke-width="2"/>
+    <path class="lit-window second" d="M120 84 H132 V97 H120Z" fill="#ffc76b" stroke="#d99449" stroke-width="2"/>
+  </g>
+  <path d="M91 86 V99 M85 92 H97 M126 84 V97 M120 90 H132" stroke="#543d3a" stroke-width="1" opacity=".8"/>
+  <path d="M53 126 Q73 119 87 123 M147 123 Q165 118 180 125" fill="none" stroke="#ab7954" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+</svg>

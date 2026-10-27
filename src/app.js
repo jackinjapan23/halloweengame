@@ -2,6 +2,7 @@ import { QUESTIONS, QUESTION_HINTS, TYPE_LABEL } from './questions.js';
 import { OUTCOMES } from './outcomes.js';
 import { applyOutcome, nextTeam, save, load, clone } from './engine.js';
 import { renderQuestionEditor, makeCustomQuestion, downloadQuestionSet, parseQuestionSet } from './question-editor.js';
+import { HAUNTED_HOUSE_SVG } from './haunted-house.js';
 
 const app = document.querySelector('#app');
 const toastEl = document.querySelector('#toast');
@@ -86,6 +87,29 @@ function playPrizeSound(prize) {
  }catch{}
 }
 const pumpkin = (n, used = false) => `<span class="pumpkin ${used?'is-used':''}"><span class="pumpkin-shape">&#127875;</span><b>${String(n).padStart(2,'0')}</b></span>`;
+const QUESTION_MASCOTS = [
+ { name: 'Vampire', emoji: '&#129499;' },
+ { name: 'Werewolf', emoji: '&#128058;' },
+ { name: 'Ghost', emoji: '&#128123;' },
+ { name: 'Zombie', emoji: '&#129503;' },
+ { name: 'Witch', emoji: '&#129497;' },
+ { name: 'Monster', emoji: '&#129484;' }
+];
+const HALLOWEEN_JOKES = [
+ { question: 'What is a ghost’s favorite food?', answer: 'Spook-etti!' },
+ { question: 'What do you call a fat pumpkin?', answer: 'A plumpkin!' },
+ { question: 'What is a witch’s favorite subject?', answer: 'Spelling!' },
+ { question: 'What room does a ghost not need?', answer: 'A living room!' },
+ { question: 'Why did the skeleton go alone to the party?', answer: 'He had no body to go with!' },
+ { question: 'What is a ghost’s favorite drink?', answer: 'Boo-ble tea!' },
+ { question: 'What do you call a witch at the beach?', answer: 'A sand-witch!' },
+ { question: 'What is a ghost’s favorite game?', answer: 'Hide and shriek!' },
+ { question: 'What is a skeleton’s favorite instrument?', answer: 'The trom-bone!' },
+ { question: 'Why don’t mummies take holidays?', answer: 'They are afraid to unwind!' },
+ { question: 'What is a vampire’s favorite fruit?', answer: 'A neck-tarine!' },
+ { question: 'Why did the ghost go to school?', answer: 'To learn boo-kkeeping!' },
+ { question: 'What do ghosts say when they meet?', answer: 'How boo you do?' }
+];
 function header() {
  return `<header class="topbar"><a class="brand" href="#"><span class="brand-icon">&#127875;</span><span><strong>MIDNIGHT CANDY</strong></span></a><div class="top-actions"><button class="icon-btn" data-action="sound-toggle" aria-pressed="${soundEnabled}">${soundEnabled?'&#128266;':'&#128263;'} <span>Sound ${soundEnabled?'on':'off'}</span></button><button class="icon-btn" data-action="motion-toggle" aria-pressed="${reducedMotion}">&#10024; <span>Motion ${reducedMotion?'reduced':'full'}</span></button><button class="icon-btn" data-action="fullscreen">&#x26F6; <span>Full screen</span></button>${state&&!['setup','results'].includes(state.phase)?'<button class="icon-btn" data-action="pause">&#x275A;&#x275A; <span>Pause</span></button>':''}</div></header>`;
 }
@@ -102,15 +126,18 @@ function renderTeamInputs() {
  const count = +(document.querySelector('#teamCount')?.textContent || 4);
  const el = document.querySelector('#teamInputs'); if (!el) return;
  const source=document.querySelector('#questionSource');if(source){source.value=questionSource;const option=source.querySelector('option[value=custom]');option.disabled=!customQuestions.length;option.textContent='My questions ('+customQuestions.length+')';}
- const old = [...el.querySelectorAll('input')].map(x => x.value);
- el.innerHTML = Array.from({length:count},(_,i)=>`<label class="team-field"><span class="team-dot t${i}"></span><span class="sr-only">Team ${i+1} name</span><input maxlength="18" value="${esc(old[i]||`Team ${i+1}`)}" aria-label="Team ${i+1} name"></label>`).join('');
+ const old = [...el.querySelectorAll('.team-field input')].map(x => x.value);
+ const oldMascots = [...el.querySelectorAll('.team-character')].map(x => x.value);
+ el.innerHTML = Array.from({length:count},(_,i)=>`<label class="team-field"><span class="team-dot t${i}"></span><span class="sr-only">Team ${i+1} name</span><input maxlength="18" value="${esc(old[i]||`Team ${i+1}`)}" aria-label="Team ${i+1} name"><select class="team-character" aria-label="Team ${i+1} Halloween character"><option value="random" ${oldMascots[i]===undefined?'selected':''}>&#127922; Random character</option>${QUESTION_MASCOTS.map((mascot,m)=>`<option value="${m}" ${String(oldMascots[i])===String(m)?'selected':''}>${mascot.emoji} ${mascot.name}</option>`).join('')}</select></label>`).join('');
 }
-function scoreboard() {
- return `<aside class="score-panel"><div class="panel-title"><span>THE SCOREBOARD</span><span class="score-live"><i></i> LIVE</span></div><div class="score-list">${state.teams.map((t,i)=>`<div class="score-row ${t.id===state.currentTeamId?'active':''}"><span class="team-dot t${i%6}"></span><span class="score-team">${esc(t.name)}${t.skipTurns?'<small>Haunted turn</small>':''}</span><strong>${t.score}<small> candy</small></strong></div>`).join('')}</div><div class="score-footer"><button data-action="adjust">+ Adjust scores</button><button data-action="undo" ${state.history?.length?'':'disabled'}>Undo last action</button></div></aside>`;
+function scoreboard(view=state.phase==='question'?'question':'selection') {
+ const team=current(),teamIndex=state.teams.indexOf(team),mascot=QUESTION_MASCOTS[team?.mascot??teamIndex%QUESTION_MASCOTS.length];
+ const joke=HALLOWEEN_JOKES[Math.floor(Math.random()*HALLOWEEN_JOKES.length)];
+ return `<aside class="score-panel"><div class="panel-title"><span>THE SCOREBOARD</span><span class="score-live"><i></i> LIVE</span></div><div class="score-list">${state.teams.map((t,i)=>`<div class="score-row ${t.id===state.currentTeamId?'active':''}"><span class="team-dot t${i%6}"></span><span class="score-team">${esc(t.name)}${t.skipTurns?'<small>Haunted turn</small>':''}</span><strong>${t.score}<small> candy</small></strong></div>`).join('')}</div><div class="score-footer"><button data-action="adjust">+ Adjust scores</button><button data-action="undo" ${state.history?.length?'':'disabled'}>Undo last action</button></div><div class="score-vampire${view==='question'?' score-question-mascot':''}"><span class="score-vampire-face" aria-hidden="true">${mascot.emoji}</span>${view==='question'?'':`<span class="score-vampire-line"><span class="joke-question">${esc(joke.question)}</span><strong>${esc(joke.answer)}</strong></span>`}</div></aside>`;
 }
 function board() {
  const used = new Set(state.used), team = current();
- return `${header()}<main class="game-layout"><section class="board-area"><div class="turn-banner turn-arrival"><div class="turn-spotlight" aria-hidden="true"></div><div><span class="eyebrow orange">THE NIGHT IS YOUNG</span><h1 aria-live="polite">${esc(team.name)}<span>'s turn</span></h1></div><div class="turn-candy">&#127852; <b>${team.score}</b><small>CANDY</small></div></div><div class="board-instruction"><span class="instruction-icon">&#10022;</span><span>Choose a pumpkin to reveal your team's question.</span><span class="progress-count">${used.size} / ${state.pumpkinCount} OPENED</span></div><div class="pumpkin-grid">${Array.from({length:state.pumpkinCount},(_,i)=>`<button class="pumpkin-tile ${used.has(i)?'used':''}" data-action="choose-pumpkin" data-index="${i}" ${used.has(i)?'disabled':''} aria-label="${used.has(i)?'Used':'Choose'} pumpkin ${i+1}">${pumpkin(i+1,used.has(i))}<span>${used.has(i)?'OPENED':'PICK ME'}</span></button>`).join('')}</div></section>${scoreboard()}</main><footer class="game-footer"><span>&#10022; Choose wisely. The night is full of surprises.</span><div class="board-teacher-actions"><button data-action="end-game" class="subtle-btn">End game</button><button data-action="new-game" class="subtle-btn">Start new game</button></div></footer>`;
+ return `${header()}<main class="game-layout"><section class="board-area"><div class="turn-banner turn-arrival"><div class="turn-spotlight" aria-hidden="true"></div><div><span class="eyebrow orange">CHOOSE YOUR DESTINY</span><h1 aria-live="polite">${esc(team.name)}<span>'s turn</span></h1></div><div class="turn-candy">&#127852; <b>${team.score}</b><small>CANDY</small></div></div><div class="board-instruction"><span class="instruction-icon">&#10022;</span><span>Choose a glowing pumpkin to reveal your team's question.</span><span class="progress-count"><b>${used.size}</b> / ${state.pumpkinCount} OPENED</span></div><div class="pumpkin-grid">${Array.from({length:state.pumpkinCount},(_,i)=>`<button class="pumpkin-tile ${used.has(i)?'used':''}" data-action="choose-pumpkin" data-index="${i}" ${used.has(i)?'disabled':''} aria-label="${used.has(i)?'Used':'Choose'} pumpkin ${i+1}">${pumpkin(i+1,used.has(i))}<span>${used.has(i)?'OPENED':'PICK ME'}</span></button>`).join('')}</div></section>${scoreboard()}</main><footer class="game-footer"><div class="board-teacher-actions"><button data-action="end-game" class="subtle-btn">End game</button><button data-action="new-game" class="subtle-btn">Start new game</button></div></footer>`;
 }
 function choiceList(q) {
  return `<div class="choice-grid">${q.choices.map((c,i)=>`<button class="choice-btn ${selectedChoice===i?'picked':''} ${state.answerRevealed&&i===q.answer?'answer-good':''}" data-action="choose-answer" data-i="${i}"><span>${'ABCD'[i]}</span>${esc(c)}${state.answerRevealed&&i===q.answer?'<b>&#10003;</b>':''}</button>`).join('')}</div>`;
@@ -127,7 +154,7 @@ function question() {
  else body = `<div class="jp-prompt translate-prompt"><small>TRANSLATE THIS SENTENCE INTO ENGLISH</small><strong>${esc(q.jp)}</strong></div><div class="teacher-hint">Say your answer aloud. Your teacher will decide if it is correct.</div>`;
  const answer = q.type==='vocab'||q.type==='grammar' ? `${'ABCD'[q.answer]}. ${q.choices[q.answer]}` : q.answer;
  const hint=q.hint?`<div class="question-hint-area">${state.hintRevealed?`<div class="question-hint" role="status"><span>&#128161; HINT</span><p>${esc(q.hint)}</p></div>`:`<button class="hint-btn" data-action="reveal-hint">&#128161; Show a hint</button>`}</div>`:'';
- return `${header()}<main class="question-layout"><div class="question-sidebar">${scoreboard()}<div class="question-progress"><span>THE HAUNTED TRAIL</span><b>${state.used.length} <small>/ ${state.pumpkinCount}</small></b><i><em style="width:${Math.round(state.used.length/state.pumpkinCount*100)}%"></em></i></div></div><section class="question-card"><div class="question-meta"><span class="question-type">${TYPE_LABEL[q.type]}</span><span class="level ${q.level.toLowerCase()}">${q.level}</span><span class="q-number">PUMPKIN ${String(state.selectedPumpkin+1).padStart(2,'0')}</span></div><div class="question-team">${pumpkin(state.selectedPumpkin+1)}<span><small>IT'S YOUR TURN</small><b>${esc(team.name)}</b></span></div>${body}${hint}${state.answerRevealed&&q.type!=='mistake'?`<div class="model-answer"><span>MODEL ANSWER</span><strong>${esc(answer)}</strong>${q.note?`<small>${esc(q.note)}</small>`:''}</div>`:''}${state.resolved===null?`<div class="question-controls"><button class="outline-btn" data-action="reveal">Reveal answer</button><div class="grade-buttons"><button class="wrong-btn" data-action="grade-no">Incorrect</button><button class="right-btn" data-action="grade-yes" ${q.type==='build'&&!selectedWords.length?'disabled':''}>Correct</button></div></div>`:`<div class="resolved-note ${state.resolved?'good':'bad'}">${state.resolved?'Correct! Choose a Trick or Treat next.':'Not quite. No Candy this time.'}</div><button class="primary-btn continue-btn" data-action="question-continue">${state.resolved?'Choose a Trick or Treat':'Continue'} <span>&#8594;</span></button>`}</section></main>`;
+ return `${header()}<main class="question-layout"><div class="question-sidebar">${scoreboard()}<div class="haunted-house-stage">${HAUNTED_HOUSE_SVG}</div></div><section class="question-card"><div class="question-meta"><span class="question-type">${TYPE_LABEL[q.type]}</span><span class="level ${q.level.toLowerCase()}">${q.level}</span><span class="q-number">PUMPKIN ${String(state.selectedPumpkin+1).padStart(2,'0')}</span></div><div class="question-team">${pumpkin(state.selectedPumpkin+1)}<span><small>IT'S YOUR TURN</small><b>${esc(team.name)}</b></span></div>${body}${hint}${state.answerRevealed&&q.type!=='mistake'?`<div class="model-answer"><span>MODEL ANSWER</span><strong>${esc(answer)}</strong>${q.note?`<small>${esc(q.note)}</small>`:''}</div>`:''}${state.resolved===null?`<div class="question-controls"><button class="outline-btn" data-action="reveal">Reveal answer</button><div class="grade-buttons"><button class="wrong-btn" data-action="grade-no">Incorrect</button><button class="right-btn" data-action="grade-yes" ${q.type==='build'&&!selectedWords.length?'disabled':''}>Correct</button></div></div>`:`<div class="resolved-note ${state.resolved?'good':'bad'}">${state.resolved?'Correct! Choose a Trick or Treat next.':'Not quite. No Candy this time.'}</div><button class="primary-btn continue-btn" data-action="question-continue">${state.resolved?'Choose a Trick or Treat':'Continue'} <span>&#8594;</span></button>`}</section></main>`;
 }
 function choiceScreen(){const team=current();return `${header()}<main class="choice-screen"><div class="choice-spotlight"></div><span class="eyebrow orange">${esc(team.name)} GOT IT RIGHT</span><h1>Now choose your<br><em>Halloween fate</em></h1><p class="choice-subtitle">Play it steady with a Treat or risk it all with a Trick.</p><div class="fate-options"><button class="fate-card trick-card" data-action="choose-trick"><span class="fate-art">&#128123;</span><span class="fate-kicker">HIGH RISK · HIGH DRAMA</span><strong>TRICK</strong><small>Could win big, lose Candy, steal, swap, or trigger a spooky event.</small><span class="fate-arrow">&#8594;</span></button><button class="fate-card treat-choice" data-action="choose-treat"><span class="fate-art trick-bag">&#127852;</span><span class="fate-kicker">STEADIER · SWEET</span><strong>TREAT</strong><small>Usually a little Candy. A rare roll can hit the jackpot.</small><span class="fate-arrow">&#8594;</span></button></div><div class="choice-score">CURRENT CANDY <b>&#127852; ${team.score}</b></div></main>`}
 function trickScreen(){const team=current(),reward=state.trickReward||{points:10,icon:'🍬'};return `${header()}<main class="trick-screen"><div class="trick-glow"></div><span class="eyebrow orange">A SWEET TREAT!</span><h1>The candy bag<br>has a surprise…</h1><div class="big-candy-bag"><span class="bag-spark spark-left">&#10022;</span><span class="bag-emoji">&#127852;</span><span class="bag-spark spark-right">&#10023;</span></div><section class="trick-prize"><span class="prize-candy">${reward.icon}</span><strong>+${reward.points} CANDY!</strong><p>${esc(team.name)} found a sweet stash!</p></section><button class="primary-btn trick-continue" data-action="finish-trick">Back to the haunted trail <span>&#8594;</span></button><p class="choice-score">TOTAL CANDY <b>&#127852; ${team.score}</b></p></main>`}
@@ -169,11 +196,12 @@ function render() {
 }
 function shuffle(list){return [...list].sort(()=>Math.random()-.5)}
 function startGame() {
- const names=[...document.querySelectorAll('#teamInputs input')].map((x,i)=>x.value.trim()||`Team ${i+1}`);
+ const names=[...document.querySelectorAll('#teamInputs .team-field input')].map((x,i)=>x.value.trim()||`Team ${i+1}`);
+ const mascots=[...document.querySelectorAll('#teamInputs .team-character')].map(x=>x.value==='random'?Math.floor(Math.random()*QUESTION_MASCOTS.length):Number(x.value));
  const score=Math.max(0,Number(document.querySelector('#startingScore').value)||0);
  const count=Math.min(30,Math.max(1,Number(document.querySelector('#pumpkinCount').value)||12));
  questionSource=document.querySelector('#questionSource')?.value||'built-in';localStorage.setItem(QUESTION_SOURCE_KEY,questionSource);const sourcePool=questionSource==='custom'?customQuestions:QUESTIONS;if(!sourcePool.length){notify('Add some questions first.');return;}const pool=sourcePool.map(q=>({...q,hint:q.hint||QUESTION_HINTS[q.id]||''}));const playableCount=Math.min(count,pool.length);if(playableCount<count)notify(`This set has ${pool.length} questions, so the game will use ${playableCount} pumpkins.`);
- state={version:1,phase:'board',soundEnabled,questionPool:clone(pool),teams:names.map((name,i)=>({id:`team-${i}`,name,score,skipTurns:0})),currentTeamId:'team-0',pumpkinCount:playableCount,requestedPumpkinCount:count,used:[],questionOrder:shuffle(pool.map((_,i)=>i)),history:[],modal:null,roundNumber:1};state.previousLeaderboard=standingsSnapshot(state.teams);
+ state={version:1,phase:'board',soundEnabled,questionPool:clone(pool),teams:names.map((name,i)=>({id:`team-${i}`,name,score,skipTurns:0,mascot:mascots[i]??i%QUESTION_MASCOTS.length})),currentTeamId:'team-0',pumpkinCount:playableCount,requestedPumpkinCount:count,used:[],questionOrder:shuffle(pool.map((_,i)=>i)),history:[],modal:null,roundNumber:1};state.previousLeaderboard=standingsSnapshot(state.teams);
  save(state);render();
 }
 function advance() {

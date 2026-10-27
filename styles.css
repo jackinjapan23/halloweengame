@@ -329,3 +329,281 @@ html:fullscreen .odds-row input{height:24px}
  html:fullscreen .question-controls{padding-top:2px}
 }
 .editor-field>small{display:block;margin-top:6px;color:#99919e;font-size:10px;line-height:1.45}
+
+/* Haunted pumpkin-picking board */
+.game-layout{position:relative;isolation:isolate}
+.board-area{position:relative;isolation:isolate;overflow:hidden;padding:clamp(18px,2vw,30px);border:1px solid #e48b4a32;border-radius:24px;background:radial-gradient(ellipse at 76% 3%,#ecc06c16,transparent 25%),radial-gradient(ellipse at 50% 100%,#933a3022,transparent 48%),linear-gradient(155deg,#151a1a,#101214 68%,#131313);box-shadow:inset 0 0 70px #05060680,0 24px 60px #0005}
+.board-area:before{content:'';position:absolute;z-index:-1;top:18px;right:11%;width:clamp(70px,9vw,128px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 38% 35%,#fff1c9,#e5bd7c 68%,#be8b5b);box-shadow:0 0 34px #eac47a38,0 0 110px #e6ae5c24;opacity:.68;animation:board-moon-glow 5s ease-in-out infinite}
+.board-area:after{content:'';position:absolute;z-index:-1;inset:auto 0 0;height:19%;pointer-events:none;background:linear-gradient(transparent,#070a0a9c),linear-gradient(90deg,transparent 10%,#080b0b 10% 12%,transparent 12% 84%,#080b0b 84% 87%,transparent 87%);opacity:.72}
+.board-area>*{position:relative}
+.turn-banner{padding:4px 8px 9px}
+.turn-banner h1{font-size:clamp(34px,4vw,52px);text-shadow:0 4px 28px #ff944222}
+.turn-banner h1 span{font-size:.58em}
+.turn-candy{padding:10px 16px;border:1px solid #f7c47445;border-radius:15px;background:linear-gradient(145deg,#3b2c1dba,#1d1918df);box-shadow:0 8px 26px #0004}
+.turn-candy b{font-size:clamp(22px,2.4vw,32px)}
+.board-instruction{margin-top:14px;padding:12px 15px;border-color:#c9835550;border-radius:12px;background:linear-gradient(100deg,#44271d9c,#17191ae8 65%,#252020);color:#e2d2c0;font-size:13px;box-shadow:inset 0 1px #ffffff0b,0 8px 25px #0003}
+.instruction-icon{font-size:18px;color:#ffc56d;text-shadow:0 0 14px #ff9e42aa}
+.progress-count{padding:7px 10px;border:1px solid #ffc76a45;border-radius:999px;background:#090b0bb8;color:#f7d99d;font-size:10px;white-space:nowrap}
+.progress-count b{font-size:15px;color:#fff0cf}
+.pumpkin-grid{grid-template-columns:repeat(auto-fit,minmax(104px,1fr));grid-auto-rows:minmax(104px,1fr);gap:clamp(8px,1.1vw,15px);margin-top:clamp(12px,2vh,20px);align-content:stretch}
+.pumpkin-tile{position:relative;isolation:isolate;overflow:hidden;min-height:106px;border:1px solid #e97b3540;border-radius:18px;background:radial-gradient(ellipse at 50% 36%,#f29b4212,transparent 60%),linear-gradient(150deg,#28201d,#171719 72%);color:#ffd9a6;box-shadow:inset 0 1px #ffffff0b,0 7px 17px #0005;gap:2px;transition:transform .2s ease,border-color .2s,box-shadow .2s,filter .2s}
+.pumpkin-tile:before{content:'';position:absolute;z-index:-1;inset:12% 18%;border-radius:50%;background:#f86c301c;filter:blur(16px);opacity:.45;transition:opacity .2s,transform .2s}
+.pumpkin-tile:nth-child(3n):before{background:#f9b84a1c}.pumpkin-tile:nth-child(4n):before{background:#b65f4324}
+.pumpkin-tile:hover:not(:disabled),.pumpkin-tile:focus-visible:not(:disabled){transform:translateY(-4px) scale(1.025);border-color:#ffb163c9;box-shadow:0 0 0 2px #ffac5430,0 0 28px #ed793244,inset 0 1px #ffffff18;outline:none}
+.pumpkin-tile:hover:not(:disabled):before,.pumpkin-tile:focus-visible:not(:disabled):before{opacity:1;transform:scale(1.35)}
+.pumpkin-tile:active:not(:disabled){transform:scale(.96)}
+.pumpkin-shape{font-size:clamp(56px,5.3vw,76px);line-height:.95;filter:drop-shadow(0 5px 12px #f86c3155)}
+.pumpkin>b{top:51%;transform:translateY(-53%);font-size:clamp(16px,1.4vw,21px);font-weight:900;text-shadow:0 2px 6px #321,0 0 10px #321;pointer-events:none}
+.pumpkin-tile>span:last-child{font-size:9px;letter-spacing:1.4px;color:#f0a36d;text-shadow:0 1px 4px #000}
+.pumpkin-tile.used{opacity:.34;filter:grayscale(.75);border-color:#77705e55;background:linear-gradient(150deg,#1a1b1b,#111314);box-shadow:inset 0 0 22px #0008}
+.pumpkin-tile.used .pumpkin-shape{filter:grayscale(.9) brightness(.65)}
+.game-layout>.score-panel{border-color:#b7795145;background:radial-gradient(ellipse at 50% 0%,#8a442016,transparent 52%),linear-gradient(165deg,#211d1c,#131416);box-shadow:inset 0 1px #ffffff0b,0 15px 35px #0004}
+.game-layout>.score-panel .panel-title{color:#dfc9ae}
+.game-layout>.score-panel .score-row.active{outline:1px solid #ffae6070;background:linear-gradient(90deg,#ff8d3724,#6b3d2c18);box-shadow:0 0 18px #f08b3120}
+.game-footer{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:clamp(12px,2vw,28px);margin-top:8px;padding:8px 4px 2px;border-top-color:#b77a4b32}
+.footer-whisper{color:#a8957e;font:italic 12px 'Playfair Display',serif;letter-spacing:.25px}
+.board-vampire{display:flex;align-items:center;gap:5px;color:#d6b4cf;pointer-events:none}
+.vampire-face{display:block;font-size:34px;line-height:1;filter:drop-shadow(0 3px 10px #ad4b8b77);transform-origin:50% 90%;animation:vampire-bob 2.8s ease-in-out infinite}
+.vampire-laugh{padding:5px 8px;border:1px solid #bd79ab4a;border-radius:9px;background:#251b28;color:#e5bddc;font:800 9px 'DM Sans',sans-serif;letter-spacing:.8px;animation:vampire-laugh 4.5s ease-in-out infinite}
+.board-teacher-actions{display:flex;justify-content:flex-end;gap:8px}
+.board-teacher-actions .subtle-btn{padding:8px 11px;border:1px solid #ffffff1b;border-radius:9px;background:#ffffff08;color:#c9bdad;white-space:nowrap}
+.board-teacher-actions .subtle-btn:hover{border-color:#f69a565e;color:#ffe0b4;background:#f38b3014}
+@keyframes board-moon-glow{0%,100%{filter:brightness(.93);transform:scale(.98)}50%{filter:brightness(1.08);transform:scale(1.025)}}
+@keyframes vampire-bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
+@keyframes vampire-laugh{0%,75%,100%{transform:translateY(0);opacity:.78}79%{transform:translateY(-2px) scale(1.05);opacity:1}83%{transform:translateY(1px);opacity:.9}87%{transform:translateY(-2px) scale(1.05);opacity:1}}
+@media(max-width:1000px){.game-layout{gap:16px}.pumpkin-grid{grid-template-columns:repeat(auto-fit,minmax(88px,1fr));grid-auto-rows:minmax(92px,1fr)}.pumpkin-tile{min-height:92px}.pumpkin-shape{font-size:clamp(52px,6.5vw,68px)}}
+@media(max-width:760px){.game-layout{gap:12px;padding:18px 0}.board-area{padding:15px 12px;border-radius:18px}.turn-banner{padding:3px 2px 7px}.turn-banner h1{font-size:clamp(30px,7vw,42px)}.turn-candy{padding:7px 10px}.board-instruction{gap:7px;margin-top:9px;padding:9px;font-size:11px}.progress-count{font-size:8px;padding:6px 7px}.pumpkin-grid{grid-template-columns:repeat(auto-fit,minmax(88px,1fr));grid-auto-rows:minmax(88px,1fr);gap:8px;margin-top:11px}.pumpkin-tile{min-height:88px;border-radius:14px}.pumpkin-shape{font-size:58px}.pumpkin>b{font-size:18px}.game-footer{grid-template-columns:auto 1fr;gap:10px;margin-top:5px;padding:6px 0}.footer-whisper{display:none}.board-vampire{justify-self:end}.vampire-face{font-size:29px}.vampire-laugh{font-size:8px}.board-teacher-actions{gap:5px}.board-teacher-actions .subtle-btn{font-size:10px;padding:7px 8px}}
+@media(max-width:380px){.board-area{padding:12px 9px}.pumpkin-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(94px,1fr)}.board-instruction{flex-wrap:wrap}.progress-count{margin-left:auto}}
+html:fullscreen .game-layout{gap:clamp(10px,1.6vw,22px)}
+html:fullscreen .board-area{padding:clamp(10px,1.6vh,18px);border-radius:20px}
+html:fullscreen .pumpkin-grid{grid-template-columns:repeat(auto-fit,minmax(92px,1fr));grid-auto-rows:minmax(0,1fr);gap:clamp(6px,.8vw,11px);margin-top:clamp(7px,1vh,12px)}
+html:fullscreen .pumpkin-tile{min-height:0;border-radius:15px}
+html:fullscreen .pumpkin-shape{font-size:clamp(46px,7vh,69px)}
+html:fullscreen .pumpkin>b{font-size:clamp(14px,2.2vh,19px)}
+html:fullscreen .board-instruction{margin-top:clamp(6px,1vh,10px);padding:7px 10px}
+html:fullscreen .turn-banner h1{font-size:clamp(27px,4vh,42px)}
+html:fullscreen .game-footer{margin-top:4px;padding:3px 4px}
+html:fullscreen .vampire-face{font-size:26px}
+html:fullscreen .vampire-laugh{padding:3px 6px;font-size:8px}
+@media(max-width:760px){html:fullscreen .game-layout{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:5px;padding:4px 0}html:fullscreen .board-area{grid-row:1;min-height:0;padding:7px 8px;border-radius:14px}html:fullscreen .game-layout>.score-panel{grid-row:2;max-height:14vh;padding:6px 9px}html:fullscreen .game-layout>.score-panel .score-list{margin:3px 0}html:fullscreen .game-layout>.score-panel .score-row{padding:3px 4px}html:fullscreen .game-layout>.score-panel .score-footer,html:fullscreen .game-layout>.score-panel .panel-title{display:none}html:fullscreen .pumpkin-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:4px;margin-top:5px}html:fullscreen .pumpkin-tile{min-height:0;padding:1px;border-radius:9px}html:fullscreen .pumpkin-shape{font-size:clamp(28px,5.2vh,43px)}html:fullscreen .pumpkin>b{font-size:clamp(11px,1.9vh,15px)}html:fullscreen .pumpkin-tile>span:last-child{font-size:7px;letter-spacing:.8px}html:fullscreen .turn-banner{padding:1px}html:fullscreen .turn-banner h1{font-size:clamp(21px,4vh,29px)}html:fullscreen .turn-banner .eyebrow{font-size:8px}html:fullscreen .turn-candy{padding:4px 7px}html:fullscreen .turn-candy b{font-size:15px}html:fullscreen .board-instruction{margin-top:4px;padding:5px 7px;font-size:9px}html:fullscreen .progress-count{padding:4px 6px;font-size:7px}html:fullscreen .instruction-icon{font-size:13px}html:fullscreen .board-vampire{display:none}html:fullscreen .game-footer{height:30px;grid-template-columns:1fr auto;padding:2px 0}html:fullscreen .board-teacher-actions .subtle-btn{padding:4px 6px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){.board-area:before,.vampire-face,.vampire-laugh{animation:none!important}}
+.reduce-motion .board-area:before,.reduce-motion .vampire-face,.reduce-motion .vampire-laugh{animation:none!important}
+
+/* Keep pumpkin numbers below the artwork instead of across its face. */
+.pumpkin-tile .pumpkin{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;line-height:1}
+.pumpkin-tile .pumpkin>b{position:static;top:auto;transform:none;order:2;margin-top:-2px;padding:2px 9px;border:1px solid #ffd58a55;border-radius:999px;background:#18110ee8;color:#fff0cb;font-size:clamp(13px,1.2vw,17px);line-height:1;text-shadow:none;z-index:1}
+.pumpkin-tile .pumpkin-shape{order:1}
+.vampire-face{font-size:48px}
+@media(max-width:760px){.vampire-face{font-size:42px}}
+@media(max-width:760px) and (orientation:landscape){.vampire-face{font-size:36px}}
+@media(max-width:760px){html:fullscreen .vampire-face{font-size:36px}}
+@media(max-width:760px){html:fullscreen .pumpkin-tile .pumpkin>b{font-size:clamp(10px,1.6vh,13px);padding:1px 6px}}
+
+/* The vampire is the board's game master, stationed beneath the scoreboard. */
+.game-layout>.score-panel{display:flex;flex-direction:column;align-self:stretch;min-width:0}
+.score-vampire{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin-top:16px;padding:10px 5px 2px;border-top:1px solid #bd79ab30;text-align:center;color:#e8d5e5}
+.score-vampire-face{display:block;font-size:clamp(148px,15vw,190px);line-height:.95;filter:drop-shadow(0 6px 14px #ad4b8b88);transform-origin:50% 90%;animation:vampire-bob 3s ease-in-out infinite}
+.score-vampire-line{font:700 clamp(12px,1.2vw,16px)/1.35 'DM Sans',sans-serif;letter-spacing:.3px;color:#e1c7dc}
+.score-vampire-line strong{display:block;color:#ffbd79;font:italic 800 1.12em 'Playfair Display',serif}
+.game-footer{grid-template-columns:minmax(0,1fr) auto}
+.game-footer .footer-whisper{font-size:11px}
+@media(max-width:760px){.game-layout>.score-panel{align-self:stretch}.score-vampire{flex-direction:column;gap:6px;margin-top:9px;padding:7px 2px 0}.score-vampire-face{font-size:116px}.score-vampire-line{font-size:14px}.score-vampire-line strong{display:block;margin-left:0}}
+@media(max-width:760px){html:fullscreen .game-layout>.score-panel{max-height:22vh;display:flex;flex-direction:column;align-items:stretch}.score-vampire{margin-top:4px;padding:3px 0 0}.score-vampire-face{font-size:clamp(82px,12vh,100px)}.score-vampire-line{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.score-vampire-face{animation:none!important}}
+.reduce-motion .score-vampire-face{animation:none!important}
+
+/* Team character controls and predictable mascot/quote stacking. */
+.team-field{display:grid;grid-template-columns:9px minmax(60px,1fr) minmax(92px,auto);gap:7px;padding:4px 7px;height:auto;min-height:39px}
+.team-field input{min-width:0;width:100%;flex:1}
+.team-character{width:100%;min-width:0;max-width:126px;height:29px;padding:3px 5px;border:1px solid #ffffff1c;border-radius:7px;background:#1c1920;color:#f2dfc5;font:600 10px 'DM Sans',sans-serif}
+.score-vampire{flex:0 0 auto;gap:4px;padding-top:8px}
+.score-character-name{font:700 11px/1.2 'DM Sans',sans-serif;letter-spacing:.3px;color:#d8c2d5}
+.score-vampire-line{max-width:100%;padding:5px 9px;border:1px solid #bd79ab4a;border-radius:10px;background:#251b28;text-align:center;line-height:1.25}
+.score-vampire-line strong{display:block;margin:2px 0 0;color:#ffbd79}
+.score-question-mascot .score-vampire-face{margin-bottom:2px}
+
+/* Keep windowed gameplay inside the browser viewport, just like fullscreen. */
+@media(min-width:761px){
+ body:has(#app>.game-layout),body:has(#app>.question-layout){height:100dvh;min-height:0;overflow:hidden}
+ #app:has(>.game-layout),#app:has(>.question-layout){display:flex;flex-direction:column;height:100dvh;min-height:0;padding:0 clamp(10px,2vw,30px) 6px;overflow:hidden}
+ #app:has(>.game-layout)>.topbar,#app:has(>.question-layout)>.topbar{flex:0 0 clamp(44px,7vh,68px);height:clamp(44px,7vh,68px);min-height:0}
+ #app>.game-layout,#app>.question-layout{flex:1 1 auto;min-height:0;max-height:none;height:auto;margin:0;padding:clamp(6px,1vh,12px) 0;overflow:hidden}
+ #app>.game-layout{grid-template-columns:minmax(0,1fr) clamp(205px,23vw,300px);gap:clamp(10px,1.5vw,22px)}
+ #app>.game-layout>.board-area{display:flex;flex-direction:column;min-height:0;overflow:hidden;padding:clamp(10px,1.5vw,24px)}
+ #app>.game-layout .pumpkin-grid{flex:1;min-height:0;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));grid-auto-rows:minmax(0,1fr);gap:clamp(5px,.8vw,10px);margin-top:clamp(6px,1vh,12px)}
+ #app>.game-layout .pumpkin-tile{min-height:0;padding:2px}
+ #app>.game-layout>.score-panel{height:100%;min-height:0;overflow:hidden;padding:clamp(8px,1vw,16px)}
+ #app>.game-layout>.score-panel .score-vampire-face{font-size:clamp(80px,11vh,126px)}
+ #app>.game-layout>.score-panel .score-vampire-line{font-size:clamp(11px,1.2vw,14px)}
+ #app>.game-footer{flex:0 0 38px;height:38px;margin-top:2px;padding:3px 4px}
+ #app>.question-layout{grid-template-columns:clamp(195px,23vw,285px) minmax(0,1fr);gap:clamp(10px,1.5vw,20px);align-items:stretch}
+ #app>.question-layout>.question-sidebar{position:static;min-height:0;overflow:hidden;gap:6px}
+ #app>.question-layout .score-panel{min-height:0;overflow:hidden;padding:10px}
+ #app>.question-layout .score-vampire-face{font-size:clamp(72px,9vh,106px)}
+ #app>.question-layout .score-vampire-line{display:none}
+ #app>.question-layout>.question-card{height:100%;min-height:0;overflow:auto;padding:clamp(12px,1.8vh,22px) clamp(14px,1.8vw,26px)}
+}
+
+/* Compact portrait/tablet layout: six columns keep up to thirty pumpkins visible. */
+@media(max-width:760px){
+ body:has(#app>.game-layout),body:has(#app>.question-layout){height:100dvh;min-height:0;overflow:hidden}
+ #app:has(>.game-layout),#app:has(>.question-layout){display:flex;flex-direction:column;height:100dvh;min-height:0;padding:0 8px 4px;overflow:hidden}
+ #app:has(>.game-layout)>.topbar,#app:has(>.question-layout)>.topbar{flex:0 0 46px;height:46px;min-height:0}
+ #app>.game-layout,#app>.question-layout{flex:1 1 auto;min-height:0;max-height:none;height:auto;margin:0;padding:4px 0;overflow:hidden}
+ #app>.game-layout{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:4px}
+ #app>.game-layout>.board-area{grid-row:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:8px;border-radius:14px}
+ #app>.game-layout .turn-banner{padding:1px 2px 4px}
+ #app>.game-layout .turn-banner h1{font-size:clamp(24px,5vw,34px)}
+ #app>.game-layout .turn-candy{padding:4px 8px}
+ #app>.game-layout .turn-candy b{font-size:18px}
+ #app>.game-layout .board-instruction{flex:none;gap:5px;margin-top:4px;padding:6px 7px;font-size:clamp(9px,2.4vw,11px)}
+ #app>.game-layout .progress-count{padding:4px 6px;font-size:8px}
+ #app>.game-layout .pumpkin-grid{flex:1;min-height:0;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:4px;margin-top:5px}
+ #app>.game-layout .pumpkin-tile{min-height:0;gap:0;padding:1px;border-radius:8px}
+ #app>.game-layout .pumpkin-shape{font-size:clamp(24px,7vw,37px)}
+ #app>.game-layout .pumpkin>b{font-size:clamp(10px,2.6vw,13px);padding:1px 5px;margin-top:-1px}
+ #app>.game-layout .pumpkin-tile>span:last-child{font-size:6px;letter-spacing:.2px}
+ #app>.game-layout>.score-panel{grid-row:2;max-height:32vh;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:5px 8px}
+ #app>.game-layout>.score-panel .panel-title{display:none}
+ #app>.game-layout>.score-panel .score-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(22px,auto);gap:2px;margin:0 0 3px;overflow:hidden}
+ #app>.game-layout>.score-panel .score-row{min-width:0;padding:2px 4px;gap:4px}
+ #app>.game-layout>.score-panel .score-team{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}
+ #app>.game-layout>.score-panel .score-row>strong{font-size:11px}
+ #app>.game-layout>.score-panel .score-footer{display:flex;justify-content:center;gap:5px;padding-top:3px}
+ #app>.game-layout>.score-panel .score-footer button{padding:3px 7px;font-size:9px}
+ #app>.game-layout>.score-panel .score-vampire{gap:2px;margin-top:3px;padding:3px 0 0}
+ #app>.game-layout>.score-panel .score-vampire-face{font-size:clamp(64px,16vw,96px)}
+ #app>.game-layout>.score-panel .score-character-name{font-size:9px}
+ #app>.game-layout>.score-panel .score-vampire-line{padding:2px 7px;font-size:10px}
+ #app>.game-footer{flex:0 0 30px;height:30px;margin:0;padding:2px 2px;font-size:9px}
+ #app>.game-footer .footer-whisper{display:none}
+ #app>.game-footer .board-teacher-actions .subtle-btn{padding:4px 7px;font-size:9px}
+ #app>.question-layout{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:4px}
+ #app>.question-layout>.question-card{grid-row:1;order:1;width:100%;height:100%;min-height:0;overflow:auto;padding:10px 12px}
+ #app>.question-layout>.question-sidebar{grid-row:2;order:2;position:static;display:block;min-height:0;max-height:22vh;overflow:hidden}
+ #app>.question-layout .score-panel{display:flex;flex-direction:column;max-height:19vh;min-height:0;overflow:hidden;padding:4px 7px}
+ #app>.question-layout .score-panel .panel-title,#app>.question-layout .score-panel .score-footer,#app>.question-layout .question-progress{display:none}
+ #app>.question-layout .score-panel .score-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(20px,auto);gap:2px;margin:0;overflow:hidden}
+ #app>.question-layout .score-panel .score-row{min-width:0;padding:2px 4px;gap:3px}
+ #app>.question-layout .score-panel .score-team{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px}
+ #app>.question-layout .score-panel .score-row>strong{font-size:10px}
+ #app>.question-layout .score-vampire{gap:1px;margin-top:2px;padding:2px 0 0}
+ #app>.question-layout .score-vampire-face{font-size:clamp(48px,12vw,70px)}
+ #app>.question-layout .score-character-name{font-size:9px}
+ #app>.question-layout .question-card .prompt-text{font-size:clamp(22px,6vw,34px);margin:8px 0;line-height:1.15}
+ #app>.question-layout .jp-prompt{margin:6px 0;padding:8px}
+ #app>.question-layout .jp-prompt strong{font-size:clamp(20px,5.7vw,30px)}
+ #app>.question-layout .choice-grid{gap:5px}
+ #app>.question-layout .choice-btn{min-height:clamp(38px,6vh,52px);padding:5px;font-size:clamp(13px,3.8vw,17px)}
+ #app>.question-layout .question-team{margin:4px 0}
+ #app>.question-layout .question-controls{padding-top:4px;margin-top:auto}
+}
+@media(max-width:380px){#app>.game-layout .pumpkin-grid{grid-template-columns:repeat(5,minmax(0,1fr))}#app>.game-layout .pumpkin-shape{font-size:clamp(22px,7vw,30px)}#app>.game-layout .pumpkin-tile>span:last-child{font-size:5px}}
+@media(max-height:640px){#app>.game-layout .board-area{padding:5px}#app>.game-layout .turn-banner h1{font-size:22px}#app>.game-layout .board-instruction{padding:4px 6px}#app>.game-layout>.score-panel .score-vampire-face{font-size:58px}#app>.game-layout>.score-panel .score-vampire-line{font-size:9px}#app>.question-layout>.question-card{padding:6px 9px}#app>.question-layout .question-card .prompt-text{margin:4px 0;font-size:22px}#app>.question-layout .jp-prompt{margin:4px 0;padding:5px}#app>.question-layout .choice-btn{min-height:34px;padding:3px;font-size:12px}}
+
+/* Short displays: compress the turn screen so its controls stay in view. */
+@media(max-height:640px){
+ #app>.question-layout>.question-card{overflow:hidden}
+ #app>.question-layout .question-meta{padding-bottom:3px}
+ #app>.question-layout .question-team{gap:6px}
+ #app>.question-layout .question-team .pumpkin-shape{font-size:25px}
+ #app>.question-layout .question-team .pumpkin>b{font-size:8px;top:8px}
+ #app>.question-layout .question-team b{font-size:13px}
+ #app>.question-layout .question-team small{font-size:8px}
+ #app>.question-layout .jp-prompt{font-size:14px;line-height:1.15}
+ #app>.question-layout .jp-prompt strong{font-size:clamp(18px,3.6vh,24px);line-height:1.15}
+ #app>.question-layout .answer-zone{min-height:0;padding:6px 8px;margin:6px 0}
+ #app>.question-layout .word-answer{min-height:22px}
+ #app>.question-layout .word-chip{padding:5px 8px;font-size:13px}
+ #app>.question-layout .word-bank{gap:5px}
+ #app>.question-layout .clear-words{margin-top:2px}
+ #app>.question-layout .question-hint-area{margin:3px 0}
+ #app>.question-layout .question-hint{padding:5px 8px;font-size:11px;line-height:1.2}
+ #app>.question-layout .question-hint p{margin:0}
+ #app>.question-layout .question-controls{padding-top:3px}
+ #app>.question-layout .question-controls .outline-btn{min-height:34px;padding:5px 10px}
+ #app>.question-layout .question-controls .grade-buttons{gap:6px}
+ #app>.question-layout .question-controls .wrong-btn,#app>.question-layout .question-controls .right-btn{min-height:34px;padding:5px 10px}
+ #app>.question-layout>.question-sidebar{max-height:22vh}
+ #app>.question-layout .score-panel{display:grid;grid-template-columns:minmax(0,1fr) 88px;grid-template-rows:minmax(0,1fr);align-items:center;padding:4px 7px}
+ #app>.question-layout .score-panel .score-list{grid-column:1;grid-row:1;align-self:center;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(18px,auto);gap:1px}
+ #app>.question-layout .score-panel .score-row{padding:1px 3px}
+ #app>.question-layout .score-panel .score-team{font-size:9px}
+ #app>.question-layout .score-panel .score-row>strong{font-size:10px}
+ #app>.question-layout .score-vampire{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:center;gap:0;margin:0;padding:0}
+ #app>.question-layout .score-vampire-face{font-size:clamp(44px,8vh,60px)}
+ #app>.question-layout .score-character-name{font-size:8px}
+}
+@media(max-height:640px) and (max-width:420px){
+ #app>.question-layout .score-panel{grid-template-columns:minmax(0,1fr) 70px}
+ #app>.question-layout .score-panel .score-list{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(16px,auto)}
+ #app>.question-layout .score-vampire-face{font-size:44px}
+}
+
+/* Short windowed setup: keep the six-team form and Start button in reach. */
+@media(max-height:680px){
+ body:has(#app>.setup-layout){height:100dvh;min-height:0;overflow:hidden}
+ #app:has(>.setup-layout){display:flex;flex-direction:column;height:100dvh;min-height:0;overflow:hidden}
+ #app:has(>.setup-layout)>.topbar{flex:0 0 48px;height:48px;min-height:0}
+ #app>.setup-layout{display:flex;flex:1;min-height:0;height:auto;justify-content:center;align-items:stretch;padding:5px;overflow:hidden}
+ #app>.setup-layout>.hero{display:none}
+ #app>.setup-layout>.setup-card{width:min(100%,560px);max-height:100%;overflow:auto;padding:9px 13px}
+ #app>.setup-layout .setup-back{margin:0 0 3px}
+ #app>.setup-layout .card-heading{margin-bottom:7px}
+ #app>.setup-layout .card-heading h2{font-size:19px}
+ #app>.setup-layout .setup-badge{padding:5px 8px}
+ #app>.setup-layout .stepper{margin:4px 0 7px}
+ #app>.setup-layout .team-inputs{gap:5px;margin-bottom:8px}
+ #app>.setup-layout .team-field{min-height:31px;padding:2px 5px}
+ #app>.setup-layout .team-character{height:24px;font-size:9px}
+ #app>.setup-layout .field-grid{gap:7px}
+ #app>.setup-layout .input-wrap input{height:34px}
+ #app>.setup-layout .question-source-block{margin-top:6px}
+ #app>.setup-layout .start-btn{margin-top:7px;padding:9px 12px}
+ #app>.setup-layout .microcopy{margin:4px 0}
+}
+
+/* Give the team character room and keep its joke clearly below it. */
+.score-character-name{display:none}
+.score-vampire-face{font-size:clamp(200px,20vw,250px)}
+.score-vampire-line{display:flex;flex-direction:column;align-items:center;gap:5px;margin-top:16px;padding:10px 12px;max-width:100%;font-size:clamp(14px,1.35vw,18px);line-height:1.3}
+.score-vampire-line .joke-question{display:block}
+.score-vampire-line strong{display:block;margin:0;font-size:1.16em}
+#app>.question-layout .score-vampire-face{font-size:clamp(120px,14vw,160px)}
+html:fullscreen .score-vampire-face{font-size:clamp(180px,18vw,230px)}
+html:fullscreen .score-vampire-line{font-size:clamp(13px,1.1vw,16px);margin-top:16px}
+@media(max-width:760px){
+ #app>.game-layout>.score-panel{max-height:44vh}
+ #app>.game-layout>.score-panel .score-vampire-face{font-size:clamp(92px,17vh,120px)}
+ #app>.game-layout>.score-panel .score-vampire-line{gap:3px;margin-top:11px;padding:7px 8px;font-size:12px}
+ #app>.game-layout>.score-panel .score-vampire-line strong{font-size:14px}
+ #app>.question-layout .score-vampire-face{font-size:clamp(72px,16vw,92px)}
+}
+@media(max-height:640px){
+ #app>.game-layout>.score-panel .score-vampire-face{font-size:clamp(88px,16vh,104px)}
+ #app>.game-layout>.score-panel .score-vampire-line{margin-top:7px;padding:5px 7px;font-size:11px}
+ #app>.game-layout>.score-panel .score-vampire-line strong{font-size:13px}
+ #app>.question-layout .score-vampire-face{font-size:clamp(68px,12vh,82px)}
+}
+@media(max-height:640px) and (max-width:420px){
+ #app>.game-layout>.score-panel .score-vampire-face{font-size:88px}
+ #app>.question-layout .score-vampire-face{font-size:66px}
+}
+@media(max-width:760px){html:fullscreen .score-vampire-face{font-size:clamp(92px,15vh,120px)}html:fullscreen .score-vampire-line{font-size:11px}}
+
+/* Sentence-building word choices: readable from a classroom and easy to tap. */
+#app>.question-layout .question-card .word-bank .word-chip{min-height:46px;padding:10px 14px;font-size:clamp(18px,2vw,22px);line-height:1.15}
+@media(max-height:640px){#app>.question-layout .question-card .word-bank .word-chip{min-height:44px;padding:9px 12px;font-size:clamp(17px,2vw,20px)}}
+
+/* Simple moonlit house-on-a-hill asset, sized to the open space under the scores. */
+.question-sidebar>.haunted-house-stage{grid-column:1;grid-row:auto;justify-self:center;align-self:center;display:flex;align-items:center;justify-content:center;width:138px;height:94px;margin:0 auto;overflow:visible}
+.haunted-house-stage svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 5px 10px #0008)}
+@media(max-width:760px){
+ #app>.question-layout>.question-sidebar{max-height:28vh}
+ #app>.question-layout>.question-sidebar>.haunted-house-stage{width:108px;height:74px}
+}
+/* Keep the team character and its line together in fullscreen too. */
+html:fullscreen .score-vampire-face{font-size:clamp(62px,10vh,108px)}
+html:fullscreen .score-character-name{font-size:10px}
+html:fullscreen .score-vampire-line{max-width:100%;font-size:clamp(10px,1.4vh,13px)}
+@media(max-width:760px){html:fullscreen .score-vampire-face{font-size:52px}html:fullscreen .score-vampire-line{font-size:9px}}
