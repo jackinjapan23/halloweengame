@@ -671,3 +671,4 @@ html:fullscreen .score-vampire-line{max-width:100%;font-size:clamp(10px,1.4vh,13
 .editor-image-preview{display:block;max-width:100%;max-height:190px;object-fit:contain;border:1px solid #ffffff22;border-radius:10px;background:#111117;margin-top:10px}
 .editor-picture-upload>small{display:block;margin-top:7px;color:#99919e;font-size:10px;line-height:1.45}
 @media(max-width:700px){.picture-question img{max-height:27vh}}
+.result-note{max-width:660px;margin:0 auto;padding:9px 14px;border:1px solid #ffbd6b55;border-radius:10px;background:#6c3e1b33;color:#ffe0b5;font-size:13px;line-height:1.45;text-align:center}
