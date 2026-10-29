@@ -1,4 +1,4 @@
-export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingIndex = null, setName = 'My Halloween questions', sets = [], activeSetId = '') {
+export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingIndex = null, setName = 'My Halloween questions', sets = [], activeSetId = '', confirmDelete = false) {
   const typeNames = { build: 'Sentence building', vocab: 'Vocabulary', grammar: 'Grammar', picture: 'Picture question', mistake: 'Fix the mistake', translate: 'Translation' };
   const rows = list.length ? list.map((q, i) => `
     <article class="custom-question-row">
@@ -19,7 +19,8 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
   return `${headerMarkup}<main class="editor-screen">
     <div class="editor-heading"><span class="eyebrow orange">TEACHER TOOL</span><h1>Your <em>question book</em></h1>
     <p>Questions save on this device. Make separate sets for different classes or lessons.</p></div>
-    <div class="question-set-toolbar"><label class="editor-field"><span>OPEN A SAVED SET</span><select id="savedQuestionSet">${sets.map(s => `<option value="${escapeHtml(s.id)}" ${s.id === activeSetId ? 'selected' : ''}>${escapeHtml(s.name)} (${s.questions.length})</option>`).join('')}</select></label><button class="outline-btn new-question-set-btn" data-action="new-question-set">＋ Start a new question set</button></div>
+    <div class="question-set-toolbar"><label class="editor-field"><span>OPEN A SAVED SET</span><select id="savedQuestionSet">${sets.map(s => `<option value="${escapeHtml(s.id)}" ${s.id === activeSetId ? 'selected' : ''}>${escapeHtml(s.name)} (${s.questions.length})</option>`).join('')}</select></label><button class="outline-btn new-question-set-btn" data-action="new-question-set">＋ Start a new question set</button><button class="outline-btn delete-question-set-btn" data-action="confirm-delete-question-set">Delete this set</button></div>
+    ${confirmDelete ? `<section class="delete-set-warning" role="alertdialog" aria-labelledby="deleteSetTitle"><strong id="deleteSetTitle">Are you sure you want to delete “${escapeHtml(setName)}”?</strong><p>This permanently removes its ${list.length} question${list.length === 1 ? '' : 's'} from this browser. You can’t undo this.</p><div><button class="delete-set-confirm" data-action="delete-question-set">Yes, delete this set</button><button class="outline-btn" data-action="cancel-delete-question-set">Keep this set</button></div></section>` : ''}
     <div class="editor-columns">
       <section class="editor-form-card"><h2>${editing ? 'Edit question' : 'Add a question'}</h2>
         <label class="editor-field"><span>QUESTION TYPE</span><select id="customType">
