@@ -10,7 +10,7 @@ let state = load() || null;
 let pregameScreen = state ? 'game' : 'intro';
 if(state?.questionPool){state.questionPool=state.questionPool.map(q=>({...q,hint:q.hint||QUESTION_HINTS[q.id]||''}));if(state.question)state.question={...state.question,hint:state.question.hint||QUESTION_HINTS[state.question.id]||''};}
 let selectedWords = [];
-let selectedChoice = null;
+let selectedChoice = state?.selectedChoice ?? null;
 let toastTimer;
 let soundEnabled = localStorage.getItem('midnight-candy-sound') !== 'off';
 let reducedMotion = localStorage.getItem('midnight-candy-motion') === 'reduced';
@@ -171,7 +171,8 @@ function board() {
  return `${header()}<main class="game-layout"><section class="board-area"><div class="turn-banner turn-arrival"><div class="turn-spotlight" aria-hidden="true"></div><div><span class="eyebrow orange">CHOOSE YOUR DESTINY</span><h1 aria-live="polite">${esc(team.name)}<span>'s turn</span></h1></div><div class="turn-candy">&#127852; <b>${team.score}</b><small>CANDY</small></div></div><div class="board-instruction"><span class="instruction-icon">&#10022;</span><span>Choose a glowing pumpkin to reveal your team's question.</span><span class="progress-count"><b>${used.size}</b> / ${state.pumpkinCount} OPENED</span></div><div class="pumpkin-grid">${Array.from({length:state.pumpkinCount},(_,i)=>`<button class="pumpkin-tile ${used.has(i)?'used':''}" data-action="choose-pumpkin" data-index="${i}" ${used.has(i)?'disabled':''} aria-label="${used.has(i)?'Used':'Choose'} pumpkin ${i+1}">${pumpkin(i+1,used.has(i))}<span>${used.has(i)?'OPENED':'PICK ME'}</span></button>`).join('')}</div></section>${scoreboard()}</main><footer class="game-footer"><div class="board-teacher-actions"><button data-action="end-game" class="subtle-btn">End game</button><button data-action="new-game" class="subtle-btn">Start new game</button></div></footer>`;
 }
 function choiceList(q) {
- return `<div class="choice-grid">${q.choices.map((c,i)=>`<button class="choice-btn ${selectedChoice===i?'picked':''} ${state.answerRevealed&&i===q.answer?'answer-good':''}" data-action="choose-answer" data-i="${i}"><span>${'ABCD'[i]}</span>${esc(c)}${state.answerRevealed&&i===q.answer?'<b>&#10003;</b>':''}</button>`).join('')}</div>`;
+ const selected=selectedChoice??state.selectedChoice??null,locked=state.answerRevealed||state.resolved!==null;
+ return `<div class="choice-grid">${q.choices.map((c,i)=>{const isSelected=selected===i,isCorrect=i===q.answer,revealed=state.answerRevealed;let result='';if(revealed&&isCorrect&&isSelected)result='<b class="choice-result choice-result-good"><span aria-hidden="true">&#10003;</span> YOUR CHOICE · CORRECT ANSWER</b>';else if(revealed&&isCorrect)result='<b class="choice-result choice-result-good"><span aria-hidden="true">&#10003;</span> CORRECT ANSWER</b>';else if(revealed&&isSelected)result='<b class="choice-result choice-result-wrong"><span aria-hidden="true">&#10005;</span> YOUR CHOICE · INCORRECT</b>';return `<button class="choice-btn ${isSelected?'picked':''} ${revealed&&isCorrect?'answer-good':''} ${revealed&&isSelected&&!isCorrect?'answer-wrong':''} ${revealed?'answer-revealed':''}" data-action="choose-answer" data-i="${i}" aria-pressed="${isSelected}" aria-disabled="${locked}" aria-label="${'ABCD'[i]}. ${esc(c)}${revealed&&isCorrect?isSelected?', your choice, correct answer':', correct answer':''}${revealed&&isSelected&&!isCorrect?', your choice, incorrect':''}"><span>${'ABCD'[i]}</span>${esc(c)}${result}</button>`}).join('')}</div>`;
 }
 function question() {
  const q=state.question, team=current();
@@ -317,7 +318,7 @@ document.addEventListener('click', e => {
  if(action==='add-word'){const i=Number(button.dataset.i);if(!selectedWords.includes(i))selectedWords.push(i);render();return;}
  if(action==='remove-word'){selectedWords.splice(Number(button.dataset.i),1);render();return;}
  if(action==='clear-words'){selectedWords=[];render();return;}
- if(action==='choose-answer'){selectedChoice=Number(button.dataset.i);render();return;}
+ if(action==='choose-answer'){if(state.answerRevealed||state.resolved!==null)return;selectedChoice=Number(button.dataset.i);state.selectedChoice=selectedChoice;save(state);render();return;}
  if(action==='reveal-hint'){if(!state.question?.hint)return;state.hintRevealed=true;save(state);render();return;}
  if(action==='reveal'){state.answerRevealed=true;save(state);render();return;}
  if(action==='grade-yes'||action==='grade-no'){if(state.resolved!==null)return;state.resolved=action==='grade-yes';save(state);if(state.resolved)playSound('correct');render();return;}
