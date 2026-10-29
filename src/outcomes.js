@@ -13,5 +13,6 @@ export const OUTCOMES=[
  {id:'blackcat',name:'Black Cat’s Boon',icon:'🐈‍⬛',description:'Your team gains 35 Candy!',effect:'gain',amount:35},
  {id:'bats',name:'Bat Swarm',icon:'🦇',description:'Every other team loses up to 10 Candy.',effect:'other_lose',amount:10},
  {id:'graveyard',name:'Graveyard Stash',icon:'⚰️',description:'Your team gains 15 Candy!',effect:'gain',amount:15},
- {id:'midnight',name:'Midnight Toll',icon:'🕰️',description:'Your team loses up to 15 Candy.',effect:'lose',amount:15}
+ {id:'midnight',name:'Midnight Toll',icon:'🕰️',description:'Your team loses up to 15 Candy.',effect:'lose',amount:15},
+ {id:'all-hallows-curse',name:'All Hallows’ Curse',icon:'🎃',description:'Every team loses up to 50 Candy!',effect:'all_lose',amount:50}
 ];
