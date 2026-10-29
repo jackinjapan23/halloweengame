@@ -24,7 +24,7 @@ export const QUESTIONS=[
 {id:'q23',type:'build',level:'MEDIUM',jp:'私は彼が作ったケーキを食べました。',words:['made','the','ate','he','cake','I'],answer:'I ate the cake he made.'},
 {id:'q24',type:'grammar',level:'MEDIUM',prompt:'This bag is _____ than that one.',choices:['heavy','heavier','heaviest','more heavy'],answer:1}
 ];
-export const TYPE_LABEL={build:'SENTENCE BUILDING',vocab:'VOCABULARY',grammar:'GRAMMAR',mistake:'FIX THE MISTAKE',translate:'TRANSLATION'};
+export const TYPE_LABEL={build:'SENTENCE BUILDING',vocab:'VOCABULARY',grammar:'GRAMMAR',picture:'PICTURE QUESTION',mistake:'FIX THE MISTAKE',translate:'TRANSLATION'};
 export const QUESTION_HINTS={
  q01:'For a starting point in time, use the word that pairs with a date.',
  q02:'Think of the natural world around people, animals, and plants.',

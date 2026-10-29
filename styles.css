@@ -659,3 +659,12 @@ html:fullscreen .score-vampire-line{max-width:100%;font-size:clamp(10px,1.4vh,13
  .treat-screen:not(.has-reveal) .treat-card small{font-size:10px}
  .treat-screen:not(.has-reveal) .treat-number{display:none}
 }
+
+/* Picture-based multiple-choice questions */
+.picture-question{display:grid;justify-items:center;gap:10px;margin:8px 0 16px;text-align:center}
+.picture-question p{margin:0;color:#f8eee5;font-size:clamp(20px,3vw,32px);font-weight:800;line-height:1.2}
+.picture-question img{display:block;width:min(100%,560px);max-height:min(32vh,310px);object-fit:contain;border:1px solid #ffffff24;border-radius:14px;background:#121116;box-shadow:0 12px 35px #0005}
+.editor-picture-upload input[type=file]{width:100%;border:1px dashed #ffffff35;border-radius:9px;background:#111117;color:#ddd3df;padding:10px;font:500 13px 'DM Sans',sans-serif}
+.editor-image-preview{display:block;max-width:100%;max-height:190px;object-fit:contain;border:1px solid #ffffff22;border-radius:10px;background:#111117;margin-top:10px}
+.editor-picture-upload>small{display:block;margin-top:7px;color:#99919e;font-size:10px;line-height:1.45}
+@media(max-width:700px){.picture-question img{max-height:27vh}}
