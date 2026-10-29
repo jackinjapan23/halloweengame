@@ -1,4 +1,4 @@
-export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingIndex = null, setName = 'My Halloween questions') {
+export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingIndex = null, setName = 'My Halloween questions', sets = [], activeSetId = '') {
   const typeNames = { build: 'Sentence building', vocab: 'Vocabulary', grammar: 'Grammar', picture: 'Picture question', mistake: 'Fix the mistake', translate: 'Translation' };
   const rows = list.length ? list.map((q, i) => `
     <article class="custom-question-row">
@@ -18,7 +18,8 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
   const choiceNumber = editing && ['vocab', 'grammar', 'picture'].includes(editing.type) ? editing.answer + 1 : 1;
   return `${headerMarkup}<main class="editor-screen">
     <div class="editor-heading"><span class="eyebrow orange">TEACHER TOOL</span><h1>Your <em>question book</em></h1>
-    <p>Questions save on this device. Download a file to keep a backup or upload it later.</p></div>
+    <p>Questions save on this device. Make separate sets for different classes or lessons.</p></div>
+    <div class="question-set-toolbar"><label class="editor-field"><span>OPEN A SAVED SET</span><select id="savedQuestionSet">${sets.map(s => `<option value="${escapeHtml(s.id)}" ${s.id === activeSetId ? 'selected' : ''}>${escapeHtml(s.name)} (${s.questions.length})</option>`).join('')}</select></label><button class="outline-btn new-question-set-btn" data-action="new-question-set">＋ Start a new question set</button></div>
     <div class="editor-columns">
       <section class="editor-form-card"><h2>${editing ? 'Edit question' : 'Add a question'}</h2>
         <label class="editor-field"><span>QUESTION TYPE</span><select id="customType">
