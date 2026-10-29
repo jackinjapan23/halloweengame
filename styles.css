@@ -733,3 +733,14 @@ html:fullscreen #app>.question-layout .question-hint{max-height:8vh;overflow:hid
 .choice-btn .choice-result-wrong{background:#ffe0e2;color:#55151c}
 .choice-btn.answer-revealed{cursor:default}
 @media(max-width:600px){.choice-btn .choice-result{max-width:42%;padding:6px 8px;font-size:9px}.choice-btn.answer-good,.choice-btn.answer-wrong{gap:8px}}
+.answer-comparison{position:relative;z-index:1;display:grid;gap:10px;margin:clamp(10px,2vh,22px) 0;padding:clamp(12px,2vh,20px);border:1px solid #ffffff20;border-radius:16px;background:linear-gradient(145deg,#17151d,#211d27);box-shadow:0 18px 50px #0004;animation:answer-spotlight .55s cubic-bezier(.2,.8,.2,1) both}
+.answer-comparison-row{display:grid;grid-template-columns:minmax(145px,.32fr) minmax(0,1fr);align-items:center;gap:12px;padding:clamp(12px,1.6vh,18px) clamp(14px,2vw,24px);border:2px solid;border-radius:12px;text-align:left}
+.answer-comparison-row>span{font-size:clamp(10px,1vw,13px);font-weight:900;letter-spacing:.08em;line-height:1.3}
+.answer-comparison-row>strong{font:900 clamp(24px,3vw,42px)/1.12 'DM Sans',sans-serif;overflow-wrap:anywhere}
+.answer-comparison-row>strong i{font-style:normal;margin-right:5px}
+.comparison-selected{border-color:#ff707b;background:linear-gradient(100deg,#56272e,#281b22);color:#fff0f1}
+.comparison-selected>span{color:#ff9aa2}
+.comparison-correct{border-color:#73e2a2;background:linear-gradient(100deg,#194c36,#17251f);color:#f1fff6;box-shadow:inset 0 0 24px #67e89c12}
+.comparison-correct>span{color:#a6f3bf}
+.answer-comparison>small{color:#d3cdd7;font-size:clamp(13px,1.4vw,17px);line-height:1.45;text-align:left;padding:4px 5px}
+@media(max-width:650px){.answer-comparison-row{grid-template-columns:1fr;gap:6px}.answer-comparison-row>strong{font-size:clamp(22px,6vw,34px)}}
