@@ -1,5 +1,5 @@
 export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingIndex = null, setName = 'My Halloween questions', sets = [], activeSetId = '', confirmDelete = false) {
-  const typeNames = { build: 'Sentence building', vocab: 'Vocabulary', grammar: 'Grammar', picture: 'Picture question', mistake: 'Fix the mistake', translate: 'Translation' };
+  const typeNames = { build: 'Sentence building', vocab: 'Vocabulary', grammar: 'Grammar', picture: 'Picture multiple choice', 'picture-open': 'Picture question · spoken answer', short: 'Simple spoken question', mistake: 'Fix the mistake', translate: 'Translation' };
   const rows = list.length ? list.map((q, i) => `
     <article class="custom-question-row">
       <span class="custom-question-number">${String(i + 1).padStart(2, '0')}</span>
@@ -24,10 +24,10 @@ export function renderQuestionEditor(list, escapeHtml, headerMarkup, editingInde
     <div class="editor-columns">
       <section class="editor-form-card"><h2>${editing ? 'Edit question' : 'Add a question'}</h2>
         <label class="editor-field"><span>QUESTION TYPE</span><select id="customType">
-          <option value="build" ${selected('build')}>Sentence building</option><option value="vocab" ${selected('vocab')}>Vocabulary</option><option value="grammar" ${selected('grammar')}>Grammar multiple choice</option><option value="picture" ${selected('picture')}>Picture multiple choice</option><option value="mistake" ${selected('mistake')}>Fix the mistake</option><option value="translate" ${selected('translate')}>Translation</option>
+          <option value="build" ${selected('build')}>Sentence building</option><option value="vocab" ${selected('vocab')}>Vocabulary multiple choice</option><option value="grammar" ${selected('grammar')}>Grammar multiple choice</option><option value="picture" ${selected('picture')}>Picture multiple choice</option><option value="short" ${selected('short')}>Simple question · spoken answer</option><option value="picture-open" ${selected('picture-open')}>Picture question · spoken answer</option><option value="mistake" ${selected('mistake')}>Fix the mistake</option><option value="translate" ${selected('translate')}>Translation</option>
         </select></label>
-        <label class="editor-field"><span id="customPromptLabel">${({'build':'JAPANESE CLUE',vocab:'JAPANESE WORD OR MEANING',grammar:'ENGLISH SENTENCE WITH A BLANK',picture:'QUESTION FOR THE PICTURE',mistake:'SENTENCE WITH THE MISTAKE',translate:'JAPANESE SENTENCE TO TRANSLATE'})[editing?.type || 'build']}</span><textarea id="customPrompt" rows="3" maxlength="240" placeholder="Write your question or clue">${escapeHtml(prompt)}</textarea></label>
-        <div class="editor-field editor-picture-upload" id="customPictureField" ${editing?.type === 'picture' ? '' : 'hidden'}><span>UPLOAD A PICTURE FROM YOUR DEVICE</span><input id="customImageFile" type="file" accept="image/*"><textarea id="customImageData" hidden>${escapeHtml(editing?.image || '')}</textarea><img id="customImagePreview" class="editor-image-preview" src="${escapeHtml(editing?.image || '')}" alt="Question picture preview" ${editing?.image ? '' : 'hidden'}><small>Images are resized for the question set. The picture is saved with your questions and works offline.</small></div>
+        <label class="editor-field"><span id="customPromptLabel">${({'build':'JAPANESE CLUE',vocab:'JAPANESE WORD OR MEANING',grammar:'ENGLISH SENTENCE WITH A BLANK',picture:'QUESTION FOR THE PICTURE',short:'QUESTION · STUDENTS ANSWER ALOUD', 'picture-open':'QUESTION FOR THE PICTURE · STUDENTS ANSWER ALOUD',mistake:'SENTENCE WITH THE MISTAKE',translate:'JAPANESE SENTENCE TO TRANSLATE'})[editing?.type || 'build']}</span><textarea id="customPrompt" rows="3" maxlength="240" placeholder="Write your question or clue">${escapeHtml(prompt)}</textarea></label>
+        <div class="editor-field editor-picture-upload" id="customPictureField" ${['picture','picture-open'].includes(editing?.type) ? '' : 'hidden'}><span>UPLOAD A PICTURE FROM YOUR DEVICE</span><input id="customImageFile" type="file" accept="image/*"><textarea id="customImageData" hidden>${escapeHtml(editing?.image || '')}</textarea><img id="customImagePreview" class="editor-image-preview" src="${escapeHtml(editing?.image || '')}" alt="Question picture preview" ${editing?.image ? '' : 'hidden'}><small>Images are resized for the question set. The picture is saved with your questions and works offline.</small></div>
         <label class="editor-field"><span>OPTIONAL HINT · DOES NOT REVEAL THE ANSWER</span><textarea id="customHint" rows="2" maxlength="240" placeholder="Add a helpful clue for learners (optional)">${escapeHtml(editing?.hint || '')}</textarea></label>
         <label class="editor-field" id="customFreeAnswer" ${['vocab', 'grammar', 'picture'].includes(editing?.type) ? 'hidden' : ''}><span>CORRECT ANSWER</span><textarea id="customAnswer" rows="2" maxlength="240" placeholder="Write the answer students should give">${escapeHtml(freeAnswer)}</textarea></label>
         <label class="editor-field" id="customTileChunks" ${editing?.type === 'build' ? '' : 'hidden'}><span>ANSWER TILE CHUNKS · ONE SECTION PER LINE</span><textarea id="customTileChunksInput" rows="4" maxlength="400" placeholder="The boy&#10;riding the unicycle">${escapeHtml(tileChunks)}</textarea><small>Leave blank to make one tile per word. Keep the chunks in the same order as the correct answer.</small></label>
@@ -71,7 +71,9 @@ export function makeCustomQuestion({ type, prompt, answer, choicesText, answerIn
     if (q.answer < 0 || q.answer > 3) throw new Error('The correct choice number must be from 1 to 4.');
     if (type === 'vocab') q.jp = prompt; else q.prompt = prompt;
     if (type === 'picture') { if (!image.startsWith('data:image/')) throw new Error('Upload a picture for this question.'); q.image = image; }
-  } else if (type === 'mistake') q.prompt = prompt;
+  } else if (type === 'short') q.prompt = prompt;
+  else if (type === 'picture-open') { q.prompt = prompt; if (!image.startsWith('data:image/')) throw new Error('Upload a picture for this question.'); q.image = image; }
+  else if (type === 'mistake') q.prompt = prompt;
   else q.jp = prompt;
   if (explanation.trim()) q.note = explanation.trim();
   if (hint.trim()) q.hint = hint.trim();
@@ -89,12 +91,14 @@ export function parseQuestionSet(text) {
   const parsed = JSON.parse(text), list = Array.isArray(parsed) ? parsed : parsed.questions;
   if (!Array.isArray(list) || !list.length) throw new Error('No questions were found in that file.');
   const valid = list.every(q => {
-    if (!q || !['build', 'vocab', 'grammar', 'picture', 'mistake', 'translate'].includes(q.type)) return false;
+    if (!q || !['build', 'vocab', 'grammar', 'picture', 'picture-open', 'short', 'mistake', 'translate'].includes(q.type)) return false;
     if (q.hint !== undefined && typeof q.hint !== 'string') return false;
     if (q.tileGroups !== undefined && (!Array.isArray(q.tileGroups) || q.tileGroups.some(group => typeof group !== 'string' || !group.trim()))) return false;
     if (q.type === 'vocab') return Boolean(q.jp && Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4);
     if (q.type === 'grammar') return Boolean(q.prompt && Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4);
     if (q.type === 'picture') return Boolean(q.prompt && typeof q.image === 'string' && q.image.length <= 350000 && /^data:image\/(?:webp|png|jpeg|gif);base64,/i.test(q.image) && Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4);
+    if (q.type === 'picture-open') return Boolean(q.prompt && typeof q.image === 'string' && q.image.length <= 350000 && /^data:image\/(?:webp|png|jpeg|gif);base64,/i.test(q.image) && typeof q.answer === 'string' && q.answer.trim());
+    if (q.type === 'short') return Boolean(q.prompt && typeof q.answer === 'string' && q.answer.trim());
     if (typeof q.answer !== 'string') return false;
     if (q.type === 'build') return Boolean(q.jp && Array.isArray(q.words) && q.words.length);
     if (q.type === 'mistake') return Boolean(q.prompt);

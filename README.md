@@ -30,4 +30,4 @@ The app uses ES modules, so serve this folder over localhost instead of opening 
 - The teacher reveals model answers and manually marks each response.
 - Use Adjust scores or Undo last action on the scoreboard.
 - Pause and resume at any time. New Game asks before replacing the active game.
-- The question editor supports picture multiple choice: upload an image, write a prompt, enter four choices, and select the correct one. Images are resized and saved with the question set, including in downloaded question files, so they work offline.
+- The question editor supports spoken-answer questions and two picture formats: picture multiple choice, or an open-answer picture prompt. The teacher marks spoken answers correct or incorrect. Uploaded images are resized and saved with the question set, including in downloaded question files, so they work offline.
