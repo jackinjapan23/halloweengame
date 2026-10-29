@@ -672,3 +672,55 @@ html:fullscreen .score-vampire-line{max-width:100%;font-size:clamp(10px,1.4vh,13
 .editor-picture-upload>small{display:block;margin-top:7px;color:#99919e;font-size:10px;line-height:1.45}
 @media(max-width:700px){.picture-question img{max-height:27vh}}
 .result-note{max-width:660px;margin:0 auto;padding:9px 14px;border:1px solid #ffbd6b55;border-radius:10px;background:#6c3e1b33;color:#ffe0b5;font-size:13px;line-height:1.45;text-align:center}
+
+/* The answer reveal becomes the visual anchor of the turn. */
+.question-card.answer-revealed .question-team{margin-bottom:clamp(8px,2vh,20px)}
+.question-card.answer-revealed .question-hint-area,
+.question-card.answer-revealed .choice-grid,
+.question-card.answer-revealed .word-bank,
+.question-card.answer-revealed .answer-zone{display:none}
+.question-card .model-answer{position:relative;z-index:1;justify-content:center;min-height:clamp(150px,24vh,270px);margin:clamp(10px,2vh,22px) 0;padding:clamp(22px,4vh,48px) clamp(18px,4vw,52px);border:1px solid #8debb0aa;border-radius:20px;background:radial-gradient(ellipse at 50% 0%,#76e9a330,transparent 74%),linear-gradient(145deg,#174c38,#103226);box-shadow:0 0 60px #5de89c22,inset 0 1px #ffffff18;text-align:center;animation:answer-spotlight .55s cubic-bezier(.2,.8,.2,1) both}
+.question-card .model-answer span{font-size:clamp(10px,1.2vw,14px);letter-spacing:2.2px;color:#9ff0b8}
+.question-card .model-answer strong{font:900 clamp(38px,5.2vw,82px)/1.08 'DM Sans',sans-serif;color:#fff;text-wrap:balance;text-shadow:0 3px 28px #8cf2b955;overflow-wrap:anywhere}
+.question-card .model-answer small{max-width:900px;margin:4px auto 0;color:#dbf2e4;font-size:clamp(14px,1.5vw,20px);line-height:1.45}
+.answer-revealed .mistake-comparison{margin:clamp(8px,1.5vh,16px) 0}
+.answer-revealed .mistake-original{opacity:.58}
+.answer-revealed .mistake-corrected{grid-column:1/-1;grid-row:1}
+.answer-revealed .mistake-corrected p{font-size:clamp(30px,4.5vw,66px);line-height:1.16}
+.event-score-impact strong{color:#ffe08b;font-weight:1000;text-shadow:0 0 18px #ffd76a70}
+@keyframes answer-spotlight{from{opacity:0;transform:translateY(14px) scale(.97);filter:brightness(.7)}to{opacity:1;transform:translateY(0) scale(1);filter:brightness(1)}}
+
+/* Picture questions keep the picture, answer and controls in the fullscreen viewport. */
+html:fullscreen #app>.question-layout>.question-card{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+html:fullscreen #app>.question-layout>.question-card.picture-question-card{gap:clamp(2px,.5vh,6px)}
+html:fullscreen #app>.question-layout>.picture-question-card .picture-question{flex:0 1 auto;min-height:0;gap:clamp(3px,.6vh,7px);margin:clamp(3px,.7vh,8px) 0}
+html:fullscreen #app>.question-layout>.picture-question-card .picture-question img{flex:0 1 auto;width:min(100%,720px);height:auto;max-height:clamp(110px,27vh,290px);min-height:0}
+html:fullscreen #app>.question-layout>.picture-question-card.open-picture-question-card .picture-question img{max-height:clamp(120px,30vh,320px)}
+html:fullscreen #app>.question-layout>.picture-question-card .choice-grid{flex:0 1 auto;gap:clamp(4px,.7vh,8px)}
+html:fullscreen #app>.question-layout>.picture-question-card .choice-btn{min-height:clamp(38px,6.8vh,60px);padding:clamp(5px,.8vh,9px) clamp(8px,1.2vw,14px)}
+html:fullscreen #app>.question-layout>.picture-question-card .question-controls{flex:none;margin-top:auto;padding-top:clamp(4px,.8vh,9px)}
+html:fullscreen #app>.question-layout>.question-card.answer-revealed .model-answer{flex:1 1 auto;min-height:0;margin:clamp(4px,.8vh,10px) 0;padding:clamp(10px,2vh,22px) clamp(12px,2vw,24px)}
+html:fullscreen #app>.question-layout>.question-card.answer-revealed .model-answer strong{font-size:clamp(36px,7vh,88px)}
+html:fullscreen #app>.question-layout>.question-card.answer-revealed .model-answer small{font-size:clamp(11px,1.8vh,17px)}
+html:fullscreen #app>.question-layout>.question-card.answer-revealed .question-controls{flex:none;margin-top:auto;padding-top:4px}
+html:fullscreen #app>.question-layout>.question-card.answer-revealed .question-team{margin:3px 0}
+html:fullscreen #app>.question-layout>.question-card.answer-revealed .question-meta{padding-bottom:4px}
+html:fullscreen #app>.question-layout>.question-card.answer-revealed .model-answer small{display:-webkit-box;max-height:5.2em;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3}
+html:fullscreen #app>.question-layout>.question-card.answer-revealed .mistake-comparison{flex:1 1 auto;min-height:0;align-content:center;gap:6px;margin:4px 0}
+html:fullscreen #app>.question-layout>.question-card.answer-revealed .mistake-corrected p{font-size:clamp(28px,5.2vh,62px)}
+html:fullscreen #app>.question-layout>.picture-question-card .model-answer{flex:1 1 auto;min-height:0}
+html:fullscreen #app>.question-layout .question-hint{max-height:8vh;overflow:hidden}
+@media(max-width:760px){
+ .question-card .model-answer{min-height:clamp(130px,20vh,210px);padding:18px 14px}
+ .question-card .model-answer strong{font-size:clamp(32px,8vw,54px)}
+ html:fullscreen #app>.question-layout>.picture-question-card .picture-question img{max-height:clamp(92px,20vh,170px)}
+ html:fullscreen #app>.question-layout>.picture-question-card.open-picture-question-card .picture-question img{max-height:clamp(100px,23vh,190px)}
+ html:fullscreen #app>.question-layout>.picture-question-card .picture-question p{font-size:clamp(15px,3.8vw,22px)}
+ html:fullscreen #app>.question-layout>.question-card.answer-revealed .model-answer strong{font-size:clamp(30px,8vw,52px)}
+}
+@media(max-height:640px){
+ html:fullscreen #app>.question-layout>.picture-question-card .picture-question img{max-height:19vh}
+ html:fullscreen #app>.question-layout>.picture-question-card.open-picture-question-card .picture-question img{max-height:21vh}
+ html:fullscreen #app>.question-layout>.question-card.answer-revealed .model-answer{padding:7px 10px;margin:3px 0}
+ html:fullscreen #app>.question-layout>.question-card.answer-revealed .model-answer strong{font-size:clamp(30px,6vh,56px)}
+}
